@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="">
+<head th:fragment="head">
+
+  <meta charset="utf-8"/>
+  <meta name="description" content="CoffeeBlog - Pheasant under pressure"/>
+  <meta name="keywords" content="portfolio, programátor, HoBi"/>
+  <meta name="author" content="HoBi"/>
+  <title>CoffeeBlog - Pheasant under pressure</title>
+
+
+  <link rel="stylesheet" th:href="@{/styles/lightbox.min.css}" type="text/css"/>
+  <link rel="stylesheet" th:href="@{/styles/bootstrap.min.css}" type="text/css"/>
+  <link rel="stylesheet" th:href="@{/styles/styles.css}" type="text/css"/>
+  <link rel="shortcut icon" th:href="@{/images/ikona.ico}"/>
+
+  <script th:src="@{/scripts/lightbox-plus-jquery.min.js}"></script>
+</head>
+
+<body>
+
+<header th:fragment="header">
+  <div id="logo">
+    <h1>CoffeeBlog<span>Pheasant under pressure</span></h1>
+    <small>coffeeblog for coffee lovers</small>
+  </div>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Articles</a></li>
+      <li><a href="#">Coffee Skills</a></li>
+      <li><a href="#">References</a></li>
+      <li><a class="kontakt-tlacitko" href="#">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+
+<footer th:fragment="footer">
+  Created by &copy;Michal Bažant 2023
+</footer>
+
+</body>
+</html>
