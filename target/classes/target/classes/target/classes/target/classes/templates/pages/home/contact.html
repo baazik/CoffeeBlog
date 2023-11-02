@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+  <div id="centrovac">
+    <section>
+      <p>
+        <img th:src="@{/images/email.png}" alt="email" class="vlevo"/>
+        If you want to contact me, don't hesitate to send me an email to <strong>bazantmi@gmail.com</strong> or use the form bellow.
+      </p>
+
+      <p class="centrovany">
+        <iframe frameborder="0" scrolling="no" width="500" height="220"
+                src="https://www.itnetwork.cz/service/mail_form.php?hash=5b5a8cdab989b5e4833544f23501910b">
+        </iframe>
+      </p>
+    </section>
+  </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+</html>

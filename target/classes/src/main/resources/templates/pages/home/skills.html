@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+
+</body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+  <div id="centrovac">
+    <section>
+      <table id="dovednosti">
+        <tr class="centrovany">
+          <td>
+            <img th:src="@{/images/html.png}" alt="HTML"/>
+          </td>
+          <td>
+            <img th:src="@{/images/java.png}" alt="Java"/>
+          </td>
+          <td>
+            <img th:src="@{/images/pascal.png}" alt="Pascal"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <h2>Espresso</h2>
+            <p>I brew espresso at home with my Rancilio coffee brewer. I also try to do cappuccino with some nice latté art. It's not perfekt yet, but I am working on it!</p>
+          </td>
+          <td>
+            <h2>V60, Chemex</h2>
+            <p>My favourite way to prepare a filter coffee. Also, with these two I have the most experiences. I absolutely love it!</p>
+          </td>
+          <td>
+            <h2>Aeropress</h2>
+            <p>The most interesting way to prepare a coffee for me but also the hardest. Aeropress gives me the real challenge!</p>
+          </td>
+        </tr>
+      </table>
+    </section>
+  </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</html>

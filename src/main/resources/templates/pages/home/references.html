@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+
+</body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+  <div id="centrovac">
+    <section>
+      <p>Here you can find some of my project I worked on in the past.</p>
+
+      <div id="reference">
+        <a th:href="@{/images/kalkulacka_java.png}" title="Calculator in JAVA" rel="lightbox[reference]">
+          <img th:src="@{/images/kalkulacka_java_nahled.png}" alt="Calculator in JAVA"/>
+        </a>
+        <a th:href="@{/images/miny_pascal.png}" title="Mines in pascal" rel="lightbox[reference]">
+          <img th:src="@{/images/miny_pascal_nahled.png}" alt="Mines in pascal"/>
+        </a>
+        <a th:href="@{/images/hobi_web.jpg}" title="Webpage written in HTML and CSS" rel="lightbox[reference]">
+          <img th:src="@{/images/hobi_web_nahled.jpg}" alt="Webpage written in HTML and CSS"/>
+        </a>
+      </div>
+    </section>
+  </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</html>
