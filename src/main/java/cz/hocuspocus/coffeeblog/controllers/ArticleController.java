@@ -1,7 +1,9 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
+import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/articles")
 public class ArticleController {
+
+    @Autowired
+    private ArticleService articleService;
+
 
     @GetMapping
     public String renderIndex(){
@@ -33,10 +39,8 @@ public class ArticleController {
             return renderCreateForm(article);
         }
 
-        // Here will be a work with DB later on
-
-        // if there are no errors in form field, we print title and description to the log and redirect the user to articles
-        System.out.println(article.getTitle() + " - " + article.getDescription());
+        // if there are no errors in form field, we save article to DB and redirect the user to articles
+        articleService.create(article);
 
         return "redirect:/articles";
 
