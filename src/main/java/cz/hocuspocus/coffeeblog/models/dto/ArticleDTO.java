@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public class ArticleDTO {
 
-    /* Zde později přidáme ještě jeden atribut */
+    /* Later on, we will add one more attribute here */
 
     @NotBlank(message = "Insert the title")
     @NotNull(message = "Insert the title")

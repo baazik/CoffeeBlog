@@ -3,6 +3,7 @@ package cz.hocuspocus.coffeeblog.models.services;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
+import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class ArticleServiceImp implements ArticleService{
     @Autowired
     private ArticleRepository articleRepository;
 
+    @Autowired
+    private ArticleMapper articleMapper;
+
     /**
      * We take data from ArticleDTO and put it into ArticleEntity newArticle
      * with setters, we se  title, content and description to the newArticle
@@ -20,12 +24,8 @@ public class ArticleServiceImp implements ArticleService{
      */
     @Override
     public void create(ArticleDTO article){
-        ArticleEntity newArticle = new ArticleEntity();
-
-        // this part will be later on changed with the mapper
-        newArticle.setTitle(article.getTitle());
-        newArticle.setContent(article.getContent());
-        newArticle.setDescription(article.getDescription());
+        // we map data from DTO to Entity here
+        ArticleEntity newArticle = articleMapper.toEntity(article);
 
         articleRepository.save(newArticle);
     }
