@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-03T14:07:04+0100",
+    date = "2023-11-06T08:13:47+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
@@ -21,10 +21,27 @@ public class ArticleMapperImpl implements ArticleMapper {
 
         ArticleEntity articleEntity = new ArticleEntity();
 
+        articleEntity.setArticleId( source.getArticleId() );
         articleEntity.setTitle( source.getTitle() );
         articleEntity.setDescription( source.getDescription() );
         articleEntity.setContent( source.getContent() );
 
         return articleEntity;
+    }
+
+    @Override
+    public ArticleDTO toDTO(ArticleEntity source) {
+        if ( source == null ) {
+            return null;
+        }
+
+        ArticleDTO articleDTO = new ArticleDTO();
+
+        articleDTO.setTitle( source.getTitle() );
+        articleDTO.setDescription( source.getDescription() );
+        articleDTO.setContent( source.getContent() );
+        articleDTO.setArticleId( source.getArticleId() );
+
+        return articleDTO;
     }
 }

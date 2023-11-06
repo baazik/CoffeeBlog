@@ -17,7 +17,14 @@
       </p>
 
       <ul class="list-group" id="clanky">
-        <!-- later on, there will be a list of articles here -->
+        <li th:each="article: ${articles}" class="list-group-item">
+          <h2><a th:href="@{'/articles/' + ${article.articleId}}" th:text="${article.title}"></a></h2>
+          <p th:text="${article.description}"></p>
+          <p>
+            <a href="#">Edit</a> |
+            <a href="#">Delete</a>
+          </p>
+        </li>
       </ul>
     </section>
   </div>

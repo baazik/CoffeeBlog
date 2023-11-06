@@ -9,4 +9,6 @@ public interface ArticleMapper {
 
     ArticleEntity toEntity(ArticleDTO source);
 
+    ArticleDTO toDTO(ArticleEntity source);
+
 }

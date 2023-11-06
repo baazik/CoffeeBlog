@@ -7,6 +7,9 @@ import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 @Service
 public class ArticleServiceImp implements ArticleService{
 
@@ -18,7 +21,7 @@ public class ArticleServiceImp implements ArticleService{
 
     /**
      * We take data from ArticleDTO and put it into ArticleEntity newArticle
-     * with setters, we se  title, content and description to the newArticle
+     * with setters, we set title, content and description to the newArticle
      * then we save it to DB
      * @param article
      */
@@ -28,6 +31,17 @@ public class ArticleServiceImp implements ArticleService{
         ArticleEntity newArticle = articleMapper.toEntity(article);
 
         articleRepository.save(newArticle);
+    }
+
+    /**
+     * We get all the saved articles from DB as List of ArticleDTO
+     * @return List of all articles in List<ArticleDTO>
+     */
+    @Override
+    public List<ArticleDTO> getAll() {
+        return StreamSupport.stream(articleRepository.findAll().spliterator(), false)
+                .map(i -> articleMapper.toDTO(i))
+                .toList();
     }
 
 }
