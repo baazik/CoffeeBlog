@@ -51,10 +51,25 @@ public class ArticleServiceImp implements ArticleService{
      */
     @Override
     public ArticleDTO getById(long articleId) {
-        ArticleEntity fetchedArticle = articleRepository
-                .findById(articleId)
-                .orElseThrow();
+        ArticleEntity fetchedArticle = getArticleOrThrow(articleId);
+
         return articleMapper.toDTO(fetchedArticle);
     }
+
+    @Override
+    public void edit(ArticleDTO article) {
+        ArticleEntity fetchedArticle = getArticleOrThrow(article.getArticleId());
+
+        articleMapper.updateArticleEntity(article, fetchedArticle);
+        articleRepository.save(fetchedArticle);
+    }
+
+    private ArticleEntity getArticleOrThrow(long articleId) {
+        return articleRepository
+                .findById(articleId)
+                .orElseThrow();
+    }
+
+
 
 }

@@ -1,6 +1,7 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
+import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private ArticleMapper articleMapper;
 
 
     /*
@@ -70,6 +74,33 @@ public class ArticleController {
         model.addAttribute("article", article);
 
         return "pages/articles/detail";
+    }
+
+    @GetMapping("edit/{articleId}")
+    public String renderEditForm(
+            @PathVariable Long articleId,
+            ArticleDTO article
+    ) {
+        ArticleDTO fetchedArticle = articleService.getById(articleId);
+        articleMapper.updateArticleDTO(fetchedArticle, article);
+
+        return "pages/articles/edit";
+    }
+
+
+    @PostMapping("edit/{articleId}")
+    public String editArticle(
+            @PathVariable long articleId,
+            @Valid ArticleDTO article,
+            BindingResult result
+    ) {
+        if (result.hasErrors())
+            return renderEditForm(articleId, article);
+
+        article.setArticleId(articleId);
+        articleService.edit(article);
+
+        return "redirect:/articles";
     }
 
 }
