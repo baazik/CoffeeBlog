@@ -10,4 +10,6 @@ public interface ArticleService {
 
     List<ArticleDTO> getAll();
 
+    ArticleDTO getById(long articleId);
+
 }

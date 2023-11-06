@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -59,6 +56,20 @@ public class ArticleController {
 
         return "redirect:/articles";
 
+    }
+
+    /*
+    Get method for detail of an article
+     */
+    @GetMapping("{articleId}")
+    public String renderDetail(
+            @PathVariable long articleId,
+            Model model
+    ) {
+        ArticleDTO article = articleService.getById(articleId);
+        model.addAttribute("article", article);
+
+        return "pages/articles/detail";
     }
 
 }

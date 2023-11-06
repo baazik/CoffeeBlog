@@ -44,4 +44,17 @@ public class ArticleServiceImp implements ArticleService{
                 .toList();
     }
 
+    /**
+     * We get an article by it's ID
+      * @param articleId
+     * @return articleMapper.toDTO(fetchedArticle)
+     */
+    @Override
+    public ArticleDTO getById(long articleId) {
+        ArticleEntity fetchedArticle = articleRepository
+                .findById(articleId)
+                .orElseThrow();
+        return articleMapper.toDTO(fetchedArticle);
+    }
+
 }
