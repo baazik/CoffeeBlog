@@ -22,7 +22,7 @@
           <p th:text="${article.description}"></p>
           <p>
             <a th:href="@{'/articles/edit/' + ${article.articleId}}">Edit</a>
-            <a href="#">Delete</a>
+            <a th:href="@{'/articles/delete/' + ${article.articleId}}">Delete</a>
           </p>
         </li>
       </ul>

@@ -45,6 +45,18 @@ public class ArticleServiceImp implements ArticleService{
     }
 
     /**
+     * We get an articleRepository with articleId here
+     * Then we can use in method edit, getById or remove
+     * @param articleId
+     * @return
+     */
+    private ArticleEntity getArticleOrThrow(long articleId) {
+        return articleRepository
+                .findById(articleId)
+                .orElseThrow();
+    }
+
+    /**
      * We get an article by it's ID
       * @param articleId
      * @return articleMapper.toDTO(fetchedArticle)
@@ -56,6 +68,13 @@ public class ArticleServiceImp implements ArticleService{
         return articleMapper.toDTO(fetchedArticle);
     }
 
+    /**
+     * We edit an article
+     * We create a new instance of ArticleEntity fetchedArticle and we "connect" it with ArticleDTO article with id
+     * Then we use updateArticleEntity from articleMapper to fill values from DTO to Entity
+     * Then we save the fetchedArticle to DB
+     * @param article
+     */
     @Override
     public void edit(ArticleDTO article) {
         ArticleEntity fetchedArticle = getArticleOrThrow(article.getArticleId());
@@ -64,12 +83,16 @@ public class ArticleServiceImp implements ArticleService{
         articleRepository.save(fetchedArticle);
     }
 
-    private ArticleEntity getArticleOrThrow(long articleId) {
-        return articleRepository
-                .findById(articleId)
-                .orElseThrow();
+    /**
+     * We create a new instance of ArticleEntity fetchedEntity and we fill it with articleRepository by articleId
+     * Then we delete such entity from DB by articleRepository.delete
+     * @param articleId
+     */
+    @Override
+    public void remove(long articleId){
+        ArticleEntity fetchedEntity = getArticleOrThrow(articleId);
+        articleRepository.delete(fetchedEntity);
     }
-
 
 
 }

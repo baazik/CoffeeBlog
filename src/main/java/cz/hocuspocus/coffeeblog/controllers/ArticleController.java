@@ -76,6 +76,9 @@ public class ArticleController {
         return "pages/articles/detail";
     }
 
+    /*
+    Get method for edit of an article
+     */
     @GetMapping("edit/{articleId}")
     public String renderEditForm(
             @PathVariable Long articleId,
@@ -87,7 +90,9 @@ public class ArticleController {
         return "pages/articles/edit";
     }
 
-
+    /*
+    Post method for edit of an artcile
+     */
     @PostMapping("edit/{articleId}")
     public String editArticle(
             @PathVariable long articleId,
@@ -99,6 +104,16 @@ public class ArticleController {
 
         article.setArticleId(articleId);
         articleService.edit(article);
+
+        return "redirect:/articles";
+    }
+
+    /*
+    Get method for delete of an article
+     */
+    @GetMapping("delete/{articleId}")
+    public String deleteArticle(@PathVariable long articleId){
+        articleService.remove(articleId);
 
         return "redirect:/articles";
     }

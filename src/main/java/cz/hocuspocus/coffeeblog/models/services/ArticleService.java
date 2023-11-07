@@ -14,4 +14,6 @@ public interface ArticleService {
 
     void edit(ArticleDTO article);
 
+    void remove(long ArticleId);
+
 }
