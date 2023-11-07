@@ -4,6 +4,7 @@ import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
+import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,7 @@ public class ArticleServiceImp implements ArticleService{
     private ArticleEntity getArticleOrThrow(long articleId) {
         return articleRepository
                 .findById(articleId)
-                .orElseThrow();
+                .orElseThrow(ArticleNotFoundException::new);
     }
 
     /**

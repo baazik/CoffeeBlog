@@ -2,6 +2,7 @@ package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
+import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -48,7 +50,8 @@ public class ArticleController {
     @PostMapping("create")
     public String createArticle(
             @Valid @ModelAttribute ArticleDTO article,
-            BindingResult result
+            BindingResult result,
+            RedirectAttributes redirectAttributes
     ) {
         // we ask, if an user filled at least one field wrong - if he does, the form is shown again with error messages
         if (result.hasErrors()){
@@ -57,6 +60,7 @@ public class ArticleController {
 
         // if there are no errors in form field, we save article to DB and redirect the user to articles
         articleService.create(article);
+        redirectAttributes.addFlashAttribute("success", "The article was successfully created.");
 
         return "redirect:/articles";
 
@@ -97,13 +101,15 @@ public class ArticleController {
     public String editArticle(
             @PathVariable long articleId,
             @Valid ArticleDTO article,
-            BindingResult result
+            BindingResult result,
+            RedirectAttributes redirectAttributes
     ) {
         if (result.hasErrors())
             return renderEditForm(articleId, article);
 
         article.setArticleId(articleId);
         articleService.edit(article);
+        redirectAttributes.addFlashAttribute("success","The article was successfully edited.");
 
         return "redirect:/articles";
     }
@@ -112,9 +118,24 @@ public class ArticleController {
     Get method for delete of an article
      */
     @GetMapping("delete/{articleId}")
-    public String deleteArticle(@PathVariable long articleId){
+    public String deleteArticle(
+            @PathVariable long articleId,
+            RedirectAttributes redirectAttributes
+    ){
         articleService.remove(articleId);
+        redirectAttributes.addFlashAttribute("success","The article was deleted.");
 
+        return "redirect:/articles";
+    }
+
+    /*
+    Method for throwing exception, when article is not found
+     */
+    @ExceptionHandler({ArticleNotFoundException.class})
+    public String handleArticleNotFoundException(
+            RedirectAttributes redirectAttributes
+    ){
+        redirectAttributes.addFlashAttribute("error","The article was not found.");
         return "redirect:/articles";
     }
 

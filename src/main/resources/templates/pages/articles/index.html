@@ -5,6 +5,9 @@
 <body>
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
+<div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
 <article>
   <div id="centrovac">
     <header>
