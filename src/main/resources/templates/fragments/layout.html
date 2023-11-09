@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="">
+<html lang="en" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:fragment="head">
 
   <meta charset="utf-8"/>
@@ -42,6 +42,13 @@
       <li><a th:href="@{/skills}">Coffee Skills</a></li>
       <li><a th:href="@{/references}">References</a></li>
       <li><a class="kontakt-tlacitko" th:href="@{/contact}">Contact</a></li>
+      <li sec:authorize="isAnonymous()"><a th:href="@{/account/login}">Login</a></li>
+      <li sec:authorize="isAnonymous()"><a th:href="@{/account/register}">Sign up</a></li>
+      <li>
+        <form method="post" th:action="@{/account/logout}">
+          <button class="btn text-white" sec:authorize="isAuthenticated()">Logout</button>
+        </form>
+      </li>
     </ul>
   </nav>
 </header>

@@ -6,6 +6,7 @@ import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ public class ArticleController {
     /*
     Getting the create form for view
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("create")
     public String renderCreateForm(@ModelAttribute ArticleDTO article){
         return "pages/articles/create";
@@ -47,6 +49,7 @@ public class ArticleController {
     /*
     Post method for form for creating an article
      */
+    @Secured("ROLE_ADMIN")
     @PostMapping("create")
     public String createArticle(
             @Valid @ModelAttribute ArticleDTO article,
@@ -83,6 +86,7 @@ public class ArticleController {
     /*
     Get method for edit of an article
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("edit/{articleId}")
     public String renderEditForm(
             @PathVariable Long articleId,
@@ -97,6 +101,7 @@ public class ArticleController {
     /*
     Post method for edit of an artcile
      */
+    @Secured("ROLE_ADMIN")
     @PostMapping("edit/{articleId}")
     public String editArticle(
             @PathVariable long articleId,
@@ -117,6 +122,7 @@ public class ArticleController {
     /*
     Get method for delete of an article
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("delete/{articleId}")
     public String deleteArticle(
             @PathVariable long articleId,
