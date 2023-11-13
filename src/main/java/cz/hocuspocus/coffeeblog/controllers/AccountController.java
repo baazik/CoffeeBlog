@@ -1,5 +1,6 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
+import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.exceptions.DuplicateEmailException;
 import cz.hocuspocus.coffeeblog.models.exceptions.PasswordsDoNotEqualException;
@@ -7,8 +8,12 @@ import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.validation.Valid;
 import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,6 +61,34 @@ public class AccountController {
 
         redirectAttributes.addFlashAttribute("success","User was successfully registred.");
         return "redirect:/account/login";
+    }
+
+    @GetMapping("changepassword")
+    public String renderChangePassword(@ModelAttribute LoggedUserDTO userDTO){
+        return "/pages/account/changepassword";
+    }
+
+    @PostMapping("changepassword")
+    public String changePassword(
+            @Valid @ModelAttribute LoggedUserDTO userDTO,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (result.hasErrors()) {
+            return renderChangePassword(userDTO);
+        }
+
+        try {
+            userService.changePassword(userDTO);
+        } catch (PasswordsDoNotEqualException e) {
+            System.out.println("Passwords do not match");
+            result.rejectValue("password", "error", "Passwords do not match.");
+            result.rejectValue("confirmPassword", "error", "Passwords do not match.");
+            return "/pages/account/changepassword";
+        }
+
+        redirectAttributes.addFlashAttribute("success", "The password was successfully changed.");
+        return "redirect:/account/login?logout";
     }
 
 }
