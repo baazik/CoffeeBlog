@@ -3,6 +3,7 @@ package cz.hocuspocus.coffeeblog.controllers;
 import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.exceptions.DuplicateEmailException;
+import cz.hocuspocus.coffeeblog.models.exceptions.InvalidPasswordException;
 import cz.hocuspocus.coffeeblog.models.exceptions.PasswordsDoNotEqualException;
 import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.validation.Valid;
@@ -79,11 +80,17 @@ public class AccountController {
         }
 
         try {
+            System.out.println("Attempting to change password");
             userService.changePassword(userDTO);
+            System.out.println("Password changed successfully");
         } catch (PasswordsDoNotEqualException e) {
             System.out.println("Passwords do not match");
             result.rejectValue("password", "error", "Passwords do not match.");
             result.rejectValue("confirmPassword", "error", "Passwords do not match.");
+            return "/pages/account/changepassword";
+        } catch (InvalidPasswordException e) {
+            System.out.println("Invalid current password");
+            result.rejectValue("currentPassword", "error", "Invalid current password.");
             return "/pages/account/changepassword";
         }
 

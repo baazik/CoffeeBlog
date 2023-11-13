@@ -13,6 +13,11 @@ public class LoggedUserDTO {
     @Size(min = 6, message = "The password must be at least 6 characters long")
     private String password;
 
+    @NotNull(message = "Insert the current password")
+    @NotBlank(message = "Insert the current password")
+    @Size(min = 6, message = "The current password must be at least 6 characters long")
+    private String currentPassword;
+
     @NotNull(message = "Insert a password")
     @NotBlank(message = "Insert a password")
     @Size(min = 6, message = "The password must be at least 6 characters long")
@@ -40,6 +45,14 @@ public class LoggedUserDTO {
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 
 }

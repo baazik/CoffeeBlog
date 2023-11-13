@@ -5,6 +5,7 @@ import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
 import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.exceptions.DuplicateEmailException;
+import cz.hocuspocus.coffeeblog.models.exceptions.InvalidPasswordException;
 import cz.hocuspocus.coffeeblog.models.exceptions.PasswordsDoNotEqualException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -58,6 +59,11 @@ public class UserServiceImpl implements UserService{
         // Get userEntity via userEmail
         UserEntity userEntity = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Check if the current password is correct
+        if (!passwordEncoder.matches(user.getCurrentPassword(), userEntity.getPassword())) {
+            throw new InvalidPasswordException();
+        }
 
         // Set new password and save to DB
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
