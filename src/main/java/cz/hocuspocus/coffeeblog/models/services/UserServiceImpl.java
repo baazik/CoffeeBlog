@@ -1,6 +1,8 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
+import cz.hocuspocus.coffeeblog.data.entities.ProfileEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
+import cz.hocuspocus.coffeeblog.data.repositories.ProfileRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
 import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
@@ -16,11 +18,16 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -33,13 +40,16 @@ public class UserServiceImpl implements UserService{
         }
 
         UserEntity userEntity = new UserEntity();
+        ProfileEntity profileEntity = new ProfileEntity();
 
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         userEntity.setAdmin(isAdmin);
+        profileEntity.setUser(userEntity);
 
         try {
             userRepository.save(userEntity);
+            profileRepository.save(profileEntity);
         } catch (DataIntegrityViolationException e){
             throw new DuplicateEmailException();
         }

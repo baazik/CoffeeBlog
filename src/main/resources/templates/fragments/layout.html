@@ -22,7 +22,9 @@
             selector: "textarea[id*=content]",
             entities: "160,nbsp",
             entity_encoding: "named",
-            entity_encoding: "raw"
+            entity_encoding: "raw",
+            plugins: "image",
+            menubar: "insert"
         });
     </script>
 
@@ -45,6 +47,7 @@
       <li sec:authorize="isAnonymous()"><a th:href="@{/account/login}">Login</a></li>
       <li sec:authorize="isAnonymous()"><a th:href="@{/account/register}">Sign up</a></li>
       <li sec:authorize="isAuthenticated()"><a th:href="@{/account/changepassword}">Change password</a></li>
+      <li sec:authorize="isAuthenticated()"><a th:href="@{/profile/userprofile}">My user profile</a></li>
       <li>
         <form method="post" th:action="@{/account/logout}">
           <button class="btn text-white" sec:authorize="isAuthenticated()">Logout</button>

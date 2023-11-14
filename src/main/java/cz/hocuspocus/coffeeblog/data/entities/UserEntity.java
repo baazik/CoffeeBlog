@@ -25,6 +25,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private boolean admin;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private ProfileEntity profile;
+
     public long getUserId() {
         return userId;
     }

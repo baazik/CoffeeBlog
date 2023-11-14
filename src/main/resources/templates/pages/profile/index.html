@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+
+<div class="centrovac">
+    <header>
+    <h1>User Profile</h1>
+    </header>
+    <section>
+    <table>
+        <tr>
+            <td>First name:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.firstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.lastName}"></td>
+        </tr>
+        <tr>
+            <td>Datum narození:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.birthday}"></td>
+        </tr>
+        <tr>
+            <td>Interests:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.interests}"></td>
+        </tr>
+        <tr>
+            <td>About me:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.aboutMe}"></td>
+        </tr>
+    </table>
+    </section>
+</div>
+
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+
+</html>
