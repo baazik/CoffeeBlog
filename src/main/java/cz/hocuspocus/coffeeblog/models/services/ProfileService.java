@@ -9,4 +9,6 @@ public interface ProfileService{
 
     ProfileDTO getLoggedUserProfile();
 
+    void editProfile(ProfileDTO profile);
+
 }

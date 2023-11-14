@@ -9,36 +9,53 @@
 <article>
     <div id="centrovac">
         <header>
-            <h1>Edit user's profile</h1>
+            <h1>Edit Profile</h1>
         </header>
 
         <section>
-            <form class="d-flex flex-column gap-2"
-                  method="post"
-                  th:action="@{'/profile/edit/' + ${id}}"
-                  th:object="${profileDTO}">
+            <form class="d-flex flex-column gap-2" method="post"
+                  th:action="@{'/profile/edit/' + ${profileId}}" th:object="${profileDTO}">
                 <div class="form-group">
-                    <label for="title" class="control-label">Title</label>
-                    <input id="title" th:field="*{title}" class="form-control"/>
-                    <small class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
+                    <label for="firstName" class="control-label">First Name</label>
+                    <input id="firstName" th:field="*{firstName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}"></small>
                 </div>
+
                 <div class="form-group">
-                    <label for="description" class="control-label">Description</label>
-                    <textarea id="description" class="form-control" th:field="*{description}"></textarea>
-                    <small class="text-danger" th:if="${#fields.hasErrors('description')}"
-                           th:errors="*{description}"></small>
+                    <label for="lastName" class="control-label">Last Name</label>
+                    <input id="lastName" th:field="*{lastName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+                           th:errors="*{lastName}"></small>
                 </div>
+
                 <div class="form-group">
-                    <label for="content" class="control-label">Content</label>
-                    <textarea id="content" class="form-control" th:field="*{content}"></textarea>
-                    <small class="text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></small>
+                    <label for="birthday" class="control-label">Birthday</label>
+                    <input type="date" id="birthday" th:field="*{birthday}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('birthday')}"
+                           th:errors="*{birthday}"></small>
                 </div>
+
+                <div class="form-group">
+                    <label for="interests" class="control-label">Interests</label>
+                    <input id="interests" th:field="*{interests}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('interests')}"
+                           th:errors="*{interests}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="aboutMe" class="control-label">About Me</label>
+                    <textarea id="aboutMe" class="form-control" th:field="*{aboutMe}"></textarea>
+                    <small class="text-danger" th:if="${#fields.hasErrors('aboutMe')}"
+                           th:errors="*{aboutMe}"></small>
+                </div>
+
                 <div class="form-group">
                     <button type="submit" class="clanky-tlacitko">Save</button>
                 </div>
             </form>
 
-            <a class="clanky-tlacitko" th:href="@{/articles}">Back to list</a>
+            <a class="clanky-tlacitko" th:href="@{/profile}">Back to Profile</a>
         </section>
     </div>
 </article>

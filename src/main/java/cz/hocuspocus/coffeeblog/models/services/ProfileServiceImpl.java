@@ -1,9 +1,11 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
+import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ProfileEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.repositories.ProfileRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
+import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ProfileMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ProfileNotFoundException;
@@ -29,7 +31,6 @@ public class ProfileServiceImpl implements ProfileService{
     @Override
     public ProfileDTO getById(long profileId) {
         ProfileEntity fetchedProfile = getProfileOrThrow(profileId);
-
         return profileMapper.toDTO(fetchedProfile);
     }
 
@@ -58,7 +59,14 @@ public class ProfileServiceImpl implements ProfileService{
 
         // with a mapper, we create a DTO here with that fetchedProfile
         return profileMapper.toDTO(fetchedProfile);
+    }
 
+    @Override
+    public void editProfile(ProfileDTO profile) {
+        ProfileEntity fetchedProfile = getProfileOrThrow(profile.getId());
+
+        profileMapper.updateProfileEntity(profile, fetchedProfile);
+        profileRepository.save(fetchedProfile);
     }
 
 
