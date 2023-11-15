@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/profile")
 public class ProfileController {
@@ -36,13 +38,29 @@ public class ProfileController {
     }
 
     /*
+    Get method for getting user profile detail via id
+     */
+    @GetMapping("{profileId}")
+    public String renderUserProfile(@PathVariable Long profileId, Model model){
+        ProfileDTO profileDTO = profileService.getById(profileId);
+        model.addAttribute("loggedUserDTO", profileDTO);
+        return "pages/profile/detail";
+    }
+
+    /*
     Get method for editing profile
      */
     @GetMapping("edit/{profileId}")
-    public String renderEditProfile(@PathVariable Long profileId, ProfileDTO profileDTO){
+    public String renderEditProfile(@PathVariable Long profileId, ProfileDTO profileDTO, RedirectAttributes redirectAttributes){
         ProfileDTO fetchedProfile = profileService.getById(profileId);
-        profileMapper.updateProfileDTO(fetchedProfile, profileDTO);
-        return "pages/profile/edit";
+        ProfileDTO fetchedLoggedUserDTO = profileService.getLoggedUserProfile();
+        if (fetchedProfile.getId() == fetchedLoggedUserDTO.getId()) {
+            profileMapper.updateProfileDTO(fetchedProfile, profileDTO);
+            return "pages/profile/edit";
+        }
+
+        redirectAttributes.addFlashAttribute("error","You can only edit your profile.");
+        return "redirect:/profile/userprofile";
     }
 
     /*
@@ -57,7 +75,7 @@ public class ProfileController {
     ){
 
         if (result.hasErrors()){
-            return renderEditProfile(profileId, profileDTO);
+            return renderEditProfile(profileId, profileDTO, redirectAttributes);
         }
 
         profileDTO.setId(profileId);
@@ -65,6 +83,17 @@ public class ProfileController {
         redirectAttributes.addFlashAttribute("success","The profile was successfully edited.");
 
         return "redirect:/profile/userprofile";
+    }
+
+    /*
+    Giving the list of articles to model for view
+     */
+    @GetMapping("list")
+    public String renderProfiles(Model model)
+    {
+        List<ProfileDTO> profiles = profileService.getAll();
+        model.addAttribute("profiles",profiles);
+        return "pages/profile/list";
     }
 
 }

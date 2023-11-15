@@ -1,6 +1,7 @@
 package cz.hocuspocus.coffeeblog.models.dto;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 public class ProfileDTO {
 
@@ -15,6 +16,8 @@ public class ProfileDTO {
     private String interests;
 
     private String aboutMe;
+
+    private int age;
 
     public String getFirstName() {
         return firstName;
@@ -38,6 +41,7 @@ public class ProfileDTO {
 
     public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
+        calculateAge();
     }
 
     public String getInterests() {
@@ -62,6 +66,24 @@ public class ProfileDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    private void calculateAge() {
+        if (birthday != null) {
+            LocalDate currentDate = LocalDate.now();
+            Period period = Period.between(birthday, currentDate);
+            this.age = period.getYears();
+        } else {
+            this.age = 0;
+        }
     }
 
 }

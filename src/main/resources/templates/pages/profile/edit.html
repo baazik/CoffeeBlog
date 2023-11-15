@@ -6,6 +6,9 @@
 <body>
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
+<div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
 <article>
     <div id="centrovac">
         <header>
@@ -31,7 +34,8 @@
 
                 <div class="form-group">
                     <label for="birthday" class="control-label">Birthday</label>
-                    <input type="date" id="birthday" th:field="*{birthday}" class="form-control" />
+                    <input name="birthday" id="birthday" type="date" th:value="*{birthday}" class="form-control" />
+                    <p>Birthday will not be visible on the web. Only your age.</p>
                     <small class="text-danger" th:if="${#fields.hasErrors('birthday')}"
                            th:errors="*{birthday}"></small>
                 </div>
@@ -55,7 +59,7 @@
                 </div>
             </form>
 
-            <a class="clanky-tlacitko" th:href="@{/profile}">Back to Profile</a>
+            <a class="clanky-tlacitko" th:href="@{/profile/userprofile}">Back to Profile</a>
         </section>
     </div>
 </article>

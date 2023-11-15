@@ -6,6 +6,8 @@
 <body>
 <header th:replace="~{fragments/layout.html :: header}"></header>
 
+<div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
 
 <div class="centrovac">
     <header>
@@ -22,7 +24,7 @@
             <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.lastName}"></td>
         </tr>
         <tr>
-            <td>Datum narození:</td>
+            <td>Birthday:</td>
             <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.birthday}"></td>
         </tr>
         <tr>
@@ -33,7 +35,12 @@
             <td>About me:</td>
             <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.aboutMe}"></td>
         </tr>
+        <tr>
+            <td>Age:</td>
+            <td th:text="${loggedUserDTO.age}"></td>
+        </tr>
     </table>
+        <a th:href="@{'/profile/edit/' + ${loggedUserDTO.id}}">Edit profile</a>
     </section>
 </div>
 

@@ -15,6 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 @Service
 public class ProfileServiceImpl implements ProfileService{
 
@@ -39,6 +42,30 @@ public class ProfileServiceImpl implements ProfileService{
                 .findById(profileId)
                 .orElseThrow(ProfileNotFoundException::new);
     }
+
+    @Override
+    public List<ProfileDTO> getAll() {
+        return StreamSupport.stream(profileRepository.findAll().spliterator(), false)
+                .map(i -> profileMapper.toDTO(i))
+                .toList();
+    }
+
+    /*
+    @Override
+    public long getLoggedUserId(){
+        // Get email of logged user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userEmail = authentication.getName();
+
+        // Get userEntity via userEmail
+        UserEntity userEntity = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        //Profile id is the same as user id, so we get this variable here
+        long profileId = userEntity.getUserId();
+        return profileId;
+    }
+     */
 
     @Override
     public ProfileDTO getLoggedUserProfile(){
