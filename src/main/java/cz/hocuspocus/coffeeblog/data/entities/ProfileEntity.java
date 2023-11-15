@@ -26,6 +26,9 @@ public class ProfileEntity {
     @Column
     private String aboutMe;
 
+    @Column
+    private String nickName;
+
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "userId")
     private UserEntity user;
@@ -84,5 +87,13 @@ public class ProfileEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 }

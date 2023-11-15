@@ -19,6 +19,8 @@ public class ProfileDTO {
 
     private int age;
 
+    private String nickName;
+
     public String getFirstName() {
         return firstName;
     }
@@ -74,6 +76,14 @@ public class ProfileDTO {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     private void calculateAge() {

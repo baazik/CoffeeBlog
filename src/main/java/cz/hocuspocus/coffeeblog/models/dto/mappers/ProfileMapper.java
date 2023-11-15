@@ -1,8 +1,6 @@
 package cz.hocuspocus.coffeeblog.models.dto.mappers;
 
-import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ProfileEntity;
-import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;

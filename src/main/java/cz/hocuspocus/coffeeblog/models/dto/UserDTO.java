@@ -12,6 +12,10 @@ public class UserDTO {
     @NotBlank(message = "Insert a valid email adress")
     private String email;
 
+    @NotNull(message = "Insert a valid nickname")
+    @NotBlank(message = "Insert a valid nickname")
+    private String nickName;
+
     @NotNull(message = "Insert a password")
     @NotBlank(message = "Insert a password")
     @Size(min = 6, message = "The password must be at least 6 characters long")
@@ -46,4 +50,11 @@ public class UserDTO {
         this.confirmPassword = confirmPassword;
     }
 
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }

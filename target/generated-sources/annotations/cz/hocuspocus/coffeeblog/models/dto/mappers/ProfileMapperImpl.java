@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-14T12:18:16+0100",
+    date = "2023-11-15T16:11:40+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
@@ -27,6 +27,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         profileEntity.setBirthday( source.getBirthday() );
         profileEntity.setInterests( source.getInterests() );
         profileEntity.setAboutMe( source.getAboutMe() );
+        profileEntity.setNickName( source.getNickName() );
 
         return profileEntity;
     }
@@ -45,6 +46,7 @@ public class ProfileMapperImpl implements ProfileMapper {
         profileDTO.setInterests( source.getInterests() );
         profileDTO.setAboutMe( source.getAboutMe() );
         profileDTO.setId( source.getId() );
+        profileDTO.setNickName( source.getNickName() );
 
         return profileDTO;
     }
@@ -61,6 +63,8 @@ public class ProfileMapperImpl implements ProfileMapper {
         target.setInterests( source.getInterests() );
         target.setAboutMe( source.getAboutMe() );
         target.setId( source.getId() );
+        target.setAge( source.getAge() );
+        target.setNickName( source.getNickName() );
     }
 
     @Override
@@ -75,5 +79,6 @@ public class ProfileMapperImpl implements ProfileMapper {
         target.setBirthday( source.getBirthday() );
         target.setInterests( source.getInterests() );
         target.setAboutMe( source.getAboutMe() );
+        target.setNickName( source.getNickName() );
     }
 }

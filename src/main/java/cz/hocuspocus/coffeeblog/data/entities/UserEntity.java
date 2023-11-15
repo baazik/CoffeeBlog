@@ -25,6 +25,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private boolean admin;
 
+    @Column(nullable = false, unique = true)
+    private String nickName;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private ProfileEntity profile;
 
@@ -58,6 +61,14 @@ public class UserEntity implements UserDetails {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     @Override

@@ -25,6 +25,11 @@
                             </small>
                         </div>
                         <div class="form-group">
+                            <label for="nickname">Nickname</label>
+                            <input id="nickname" name="nickName" th:field="*{nickName}" class="form-control"/>
+                            <small class="text-danger" th:errors="*{nickName}"></small>
+                        </div>
+                        <div class="form-group">
                             <label for="password">Password</label>
                             <input id="password" name="password" type="password" th:field="*{password}" class="form-control"/>
                             <small class="text-danger" th:errors="*{password}">

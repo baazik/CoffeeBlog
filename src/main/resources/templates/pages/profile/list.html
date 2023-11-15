@@ -17,7 +17,7 @@
     <section>
       <ul class="list-group" id="clanky">
         <li th:each="profile: ${profiles}" class="list-group-item">
-          <p><a th:href="@{'/profile/' + ${profile.id}}" th:text="${profile.firstName}"></a></p>
+          <p><a th:href="@{'/profile/' + ${profile.id}}" th:text="${profile.nickName}"></a></p>
         </li>
       </ul>
     </section>
