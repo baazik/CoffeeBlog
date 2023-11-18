@@ -33,6 +33,13 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="nickName" class="control-label">Nickname</label>
+                    <input id="nickName" th:field="*{nickName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('nickName')}"
+                           th:errors="*{nickName}"></small>
+                </div>
+
+                <div class="form-group">
                     <label for="birthday" class="control-label">Birthday</label>
                     <input name="birthday" id="birthday" type="date" th:value="*{birthday}" class="form-control" />
                     <p>Birthday will not be visible on the web. Only your age.</p>

@@ -2,6 +2,9 @@ package cz.hocuspocus.coffeeblog.data.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class ArticleEntity {
 
@@ -17,6 +20,12 @@ public class ArticleEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "article_id")
+    @OrderBy("date DESC")
+    private List<CommentEntity> comments = new ArrayList<>();
+
 
     public long getArticleId() {
         return articleId;
@@ -48,5 +57,13 @@ public class ArticleEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public List<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentEntity> comments) {
+        this.comments = comments;
     }
 }

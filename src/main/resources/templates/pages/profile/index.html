@@ -24,6 +24,10 @@
             <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.lastName}"></td>
         </tr>
         <tr>
+            <td>Nickname:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.nickName}"></td>
+        </tr>
+        <tr>
             <td>Birthday:</td>
             <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.birthday}"></td>
         </tr>

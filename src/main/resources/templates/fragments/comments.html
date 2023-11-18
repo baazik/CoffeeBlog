@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+    <div id="centrovac">
+        <form class="d-flex flex-column gap-2"
+              method="post"
+              th:action="@{'/articles/' + ${articleId}} + '/createComment'"
+              th:object="${commentDTO}">
+            <div class="form-group">
+                <label for="comment" class="control-label">Comment</label>
+                <textarea id="comment" class="form-control" th:field="*{comment}"></textarea>
+                <small class="text-danger" th:errors="*{comment}"></small>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="clanky-tlacitko">Add comment</button>
+            </div>
+        </form>
+    </div>
+</article>
+
+</body>
+
+</html>

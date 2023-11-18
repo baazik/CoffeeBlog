@@ -11,17 +11,13 @@
 
 <div class="centrovac">
   <header>
-    <h1 th:text="${loggedUserDTO.firstName} + ${loggedUserDTO.lastName}"></h1>
+    <h1 th:text="${loggedUserDTO.nickName}"></h1>
   </header>
   <section>
     <table>
       <tr>
-        <td>First name:</td>
-        <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.firstName}"></td>
-      </tr>
-      <tr>
-        <td>Last name:</td>
-        <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.lastName}"></td>
+        <td>Nickname:</td>
+        <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.nickName}"></td>
       </tr>
       <tr>
         <td>Interests:</td>

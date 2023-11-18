@@ -1,9 +1,11 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
+import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
+import cz.hocuspocus.coffeeblog.models.services.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -21,6 +24,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleService articleService;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -64,9 +70,26 @@ public class ArticleController {
         // if there are no errors in form field, we save article to DB and redirect the user to articles
         articleService.create(article);
         redirectAttributes.addFlashAttribute("success", "The article was successfully created.");
-
         return "redirect:/articles";
+    }
 
+    @PostMapping("{articleId}/createComment")
+    public String createComment(
+            @PathVariable long articleId,
+            @Valid @ModelAttribute("commentDTO") CommentDTO comment,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+        // we ask if a user filled at least one field wrong - if he does, the form is shown again with error messages
+        if (result.hasErrors()) {
+            return renderDetail(articleId, model);
+        }
+
+        // if there are no errors in form fields, we save the comment to DB and redirect the user to articles
+        commentService.create(comment, articleId);
+        redirectAttributes.addFlashAttribute("success", "The comment was successfully created.");
+        return "redirect:/articles/{articleId}";
     }
 
     /*
@@ -78,7 +101,12 @@ public class ArticleController {
             Model model
     ) {
         ArticleDTO article = articleService.getById(articleId);
+        List<CommentDTO> comments = commentService.getByArticleId(articleId);
+        model.addAttribute("comments",comments);
         model.addAttribute("article", article);
+        model.addAttribute("commentDTO", new CommentDTO());
+        System.out.println("ArticleId "  + articleId);
+        model.addAttribute("articleId", articleId);
 
         return "pages/articles/detail";
     }

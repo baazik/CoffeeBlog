@@ -10,7 +10,30 @@
   <div id="centrovac">
     <section>
       <p th:utext="${article.content}"></p>
+      <br>
+      <li th:each="comment: ${comments}" class="list-group-item">
+        <p th:text="${comment.comment}"></p>
+        <br>
+        <br>
+        <form class="d-flex flex-column gap-2"
+              method="post"
+              th:action="@{'/articles/' + ${articleId} + '/createComment'}"
+              th:object="${commentDTO}">
+          <!-- Skryté pole pro articleId -->
+          <input type="hidden" id="articleId" name="articleId" th:value="${articleId}" />
 
+          <div class="form-group">
+            <label for="comment" class="control-label">Comment</label>
+            <textarea id="comment" class="form-control" th:field="*{comment}"></textarea>
+            <small class="text-danger" th:errors="*{comment}"></small>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="clanky-tlacitko">Add comment</button>
+          </div>
+        </form>
+
+        <br><br>
+      </li>
       <a class="clanky-tlacitko" th:href="@{/articles}">Back to list</a>
     </section>
   </div>

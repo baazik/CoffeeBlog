@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-10T16:37:51+0100",
+    date = "2023-11-18T21:29:24+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
@@ -23,6 +23,7 @@ public class AccountMapperImpl implements AccountMapper {
 
         userEntity.setEmail( source.getEmail() );
         userEntity.setPassword( source.getPassword() );
+        userEntity.setNickName( source.getNickName() );
 
         return userEntity;
     }
@@ -37,6 +38,7 @@ public class AccountMapperImpl implements AccountMapper {
 
         userDTO.setEmail( source.getEmail() );
         userDTO.setPassword( source.getPassword() );
+        userDTO.setNickName( source.getNickName() );
 
         return userDTO;
     }
@@ -50,6 +52,7 @@ public class AccountMapperImpl implements AccountMapper {
         target.setEmail( source.getEmail() );
         target.setPassword( source.getPassword() );
         target.setConfirmPassword( source.getConfirmPassword() );
+        target.setNickName( source.getNickName() );
     }
 
     @Override
@@ -60,5 +63,6 @@ public class AccountMapperImpl implements AccountMapper {
 
         target.setEmail( source.getEmail() );
         target.setPassword( source.getPassword() );
+        target.setNickName( source.getNickName() );
     }
 }
