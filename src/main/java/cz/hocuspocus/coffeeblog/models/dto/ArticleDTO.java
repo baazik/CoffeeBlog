@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDateTime;
+
 
 public class ArticleDTO {
 
@@ -21,6 +23,8 @@ public class ArticleDTO {
     @NotBlank(message = "Insert the content")
     @NotNull(message = "Insert the content")
     private String content;
+
+    private LocalDateTime date;
 
     //region: Getters and setters
     public String getTitle() {
@@ -55,6 +59,13 @@ public class ArticleDTO {
         this.articleId = articleId;
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
     //endregion
 
 }

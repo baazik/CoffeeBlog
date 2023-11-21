@@ -2,8 +2,10 @@ package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
+import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ProfileMapper;
 import cz.hocuspocus.coffeeblog.models.services.ProfileService;
+import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,9 @@ public class ProfileController {
 
     @Autowired
     private ProfileService profileService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ProfileMapper profileMapper;
@@ -79,7 +84,11 @@ public class ProfileController {
         }
 
         profileDTO.setId(profileId);
-        profileService.editProfile(profileDTO);
+        // with this, we make sure, the nickname will be also changed in user entity, not only in profile entity
+        UserDTO userDTO = userService.getLoggedUserDTO();
+        userDTO.setNickName(profileDTO.getNickName());
+
+        profileService.editProfile(profileDTO, userDTO);
         redirectAttributes.addFlashAttribute("success","The profile was successfully edited.");
 
         return "redirect:/profile/userprofile";

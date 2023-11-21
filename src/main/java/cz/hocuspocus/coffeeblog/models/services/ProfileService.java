@@ -2,6 +2,7 @@ package cz.hocuspocus.coffeeblog.models.services;
 
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
+import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -16,6 +17,6 @@ public interface ProfileService{
 
     // long getLoggedUserId();
 
-    void editProfile(ProfileDTO profile);
+    void editProfile(ProfileDTO profile, UserDTO user);
 
 }

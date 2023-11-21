@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
@@ -16,7 +17,7 @@ public class ApplicationSecurityConfiguration {
         return http
                 .authorizeHttpRequests()
                 .anyRequest()
-                .permitAll() // <-- Všechny stránky povolíme (pravidla budeme definovat přímo v kontroleru)
+                .permitAll()
                 .and()
                 .formLogin()
                 .loginPage("/account/login")
@@ -27,6 +28,9 @@ public class ApplicationSecurityConfiguration {
                 .and()
                 .logout()
                 .logoutUrl("/account/logout")
+                .logoutRequestMatcher(new AntPathRequestMatcher("/account/logout")) // Povolí GET požadavky pro odhlášení
+                .logoutSuccessUrl("/articles")
+                .permitAll()
                 .and()
                 .build();
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CommentRepository extends CrudRepository<CommentEntity, Long> {
 
-    @Query("SELECT c FROM CommentEntity c WHERE c.article.articleId = :articleId")
+    @Query("SELECT c FROM CommentEntity c WHERE c.article.articleId = :articleId ORDER BY c.date DESC")
     List<CommentEntity> findByArticleId(@Param("articleId") long articleId);
 
 }

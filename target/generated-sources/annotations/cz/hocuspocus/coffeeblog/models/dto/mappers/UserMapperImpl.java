@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
-public class AccountMapperImpl implements AccountMapper {
+public class UserMapperImpl implements UserMapper {
 
     @Override
     public UserEntity toEntity(UserDTO source) {

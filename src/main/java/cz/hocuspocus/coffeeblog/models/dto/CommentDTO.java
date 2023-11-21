@@ -3,6 +3,7 @@ package cz.hocuspocus.coffeeblog.models.dto;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class CommentDTO {

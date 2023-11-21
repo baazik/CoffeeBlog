@@ -44,15 +44,21 @@
       <li><a th:href="@{/skills}">Coffee Skills</a></li>
       <li><a th:href="@{/references}">References</a></li>
       <li><a class="kontakt-tlacitko" th:href="@{/contact}">Contact</a></li>
-      <li sec:authorize="isAnonymous()"><a th:href="@{/account/login}">Login</a></li>
-      <li sec:authorize="isAnonymous()"><a th:href="@{/account/register}">Sign up</a></li>
-      <li sec:authorize="isAuthenticated()"><a th:href="@{/account/changepassword}">Change password</a></li>
-      <li sec:authorize="isAuthenticated()"><a th:href="@{/profile/userprofile}">My user profile</a></li>
-      <li sec:authorize="isAuthenticated()"><a th:href="@{/profile/list}">Users</a></li>
-      <li>
-        <form method="post" th:action="@{/account/logout}">
-          <button class="btn text-white" sec:authorize="isAuthenticated()">Logout</button>
-        </form>
+      <li class="dropdown">
+        <a href="#" class="dropbtn">Account</a>
+        <div class="dropdown-content">
+          <a sec:authorize="isAnonymous()" th:href="@{/account/login}" class="dropdown-link">Login</a>
+          <a sec:authorize="isAnonymous()" th:href="@{/account/register}" class="dropdown-link">Sign up</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/changepassword}" class="dropdown-link">Change password</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">My user profile</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Users</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" class="dropdown-link">Logout</a>
+          <!--
+          <form sec:authorize="isAuthenticated()" method="post" th:action="@{/account/logout}">
+            <button class="btn text-white">Logout</button>
+          </form>
+          -->
+        </div>
       </li>
     </ul>
   </nav>

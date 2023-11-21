@@ -2,6 +2,7 @@ package cz.hocuspocus.coffeeblog.data.entities;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,9 @@ public class ArticleEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column
+    private LocalDateTime date;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
@@ -65,5 +69,13 @@ public class ArticleEntity {
 
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

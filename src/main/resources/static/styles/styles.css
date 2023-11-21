@@ -252,3 +252,37 @@ Flash messages
 .message-error {
     background: #d41400;
 }
+
+/* Dropdown styling */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  width: 200px;
+}
+
+.dropdown-content a.dropdown-link {
+  display: block;
+  color: black;
+  padding: 8px 16px; /* Adjusted padding */
+  text-decoration: none;
+  width: 200px;
+}
+
+.dropdown-content a.dropdown-link:hover {
+  background-color: #f1f1f1;
+  width: 200px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+  width: 200px;
+}

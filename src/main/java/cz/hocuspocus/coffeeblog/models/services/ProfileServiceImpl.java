@@ -1,13 +1,13 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
-import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ProfileEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.repositories.ProfileRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
-import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
+import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ProfileMapper;
+import cz.hocuspocus.coffeeblog.models.dto.mappers.UserMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ProfileNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -30,6 +30,12 @@ public class ProfileServiceImpl implements ProfileService{
     @Autowired
     private ProfileMapper profileMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public ProfileDTO getById(long profileId) {
@@ -50,22 +56,6 @@ public class ProfileServiceImpl implements ProfileService{
                 .toList();
     }
 
-    /*
-    @Override
-    public long getLoggedUserId(){
-        // Get email of logged user
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userEmail = authentication.getName();
-
-        // Get userEntity via userEmail
-        UserEntity userEntity = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        //Profile id is the same as user id, so we get this variable here
-        long profileId = userEntity.getUserId();
-        return profileId;
-    }
-     */
 
     @Override
     public ProfileDTO getLoggedUserProfile(){
@@ -89,11 +79,14 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
-    public void editProfile(ProfileDTO profile) {
+    public void editProfile(ProfileDTO profile, UserDTO user) {
         ProfileEntity fetchedProfile = getProfileOrThrow(profile.getId());
-
+        UserEntity fetchedUser = userService.getUserOrThrow(profile.getId());
+        // we update profile as well as user, because with that, we make sure nickname will be change in both
         profileMapper.updateProfileEntity(profile, fetchedProfile);
+        userMapper.updateUserEntity(user, fetchedUser);
         profileRepository.save(fetchedProfile);
+        userRepository.save(fetchedUser);
     }
 
 

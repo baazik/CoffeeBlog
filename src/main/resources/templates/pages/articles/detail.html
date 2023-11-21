@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs-cz" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="cs-cz" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:replace="~{fragments/layout.html :: head}"></head>
 
@@ -9,31 +9,36 @@
 <article>
   <div id="centrovac">
     <section>
+      <h2 th:text="${article.title}"></h2>
+      <p th:text="${#temporals.format(article.date, 'dd.MM. yyyy HH:mm')}"></p>
       <p th:utext="${article.content}"></p>
       <br>
+      <h2>Comments</h2>
       <li th:each="comment: ${comments}" class="list-group-item">
         <p th:text="${comment.comment}"></p>
-        <br>
-        <br>
-        <form class="d-flex flex-column gap-2"
-              method="post"
-              th:action="@{'/articles/' + ${articleId} + '/createComment'}"
-              th:object="${commentDTO}">
-          <!-- Skryté pole pro articleId -->
-          <input type="hidden" id="articleId" name="articleId" th:value="${articleId}" />
-
-          <div class="form-group">
-            <label for="comment" class="control-label">Comment</label>
-            <textarea id="comment" class="form-control" th:field="*{comment}"></textarea>
-            <small class="text-danger" th:errors="*{comment}"></small>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="clanky-tlacitko">Add comment</button>
-          </div>
-        </form>
-
-        <br><br>
+        <p th:text="${#temporals.format(comment.date, 'dd.MM. yyyy HH:mm')}"></p>
+        <p th:text="${comment.user.nickName}"></p>
       </li>
+      <br>
+      <li sec:authorize="isAuthenticated()" class ="list-group-item">
+      <form class="d-flex flex-column gap-2"
+            method="post"
+            th:action="@{'/articles/' + ${articleId} + '/createComment'}"
+            th:object="${commentDTO}">
+        <!-- Skryté pole pro articleId -->
+        <input type="hidden" id="articleId" name="articleId" th:value="${articleId}" />
+
+        <div class="form-group">
+          <label for="comment" class="control-label">Comment</label>
+          <textarea id="comment" class="form-control" th:field="*{comment}"></textarea>
+          <small class="text-danger" th:errors="*{comment}"></small>
+        </div>
+        <div class="form-group">
+          <button type="submit" class="clanky-tlacitko">Add comment</button>
+        </div>
+      </form>
+      </li>
+      <br><br>
       <a class="clanky-tlacitko" th:href="@{/articles}">Back to list</a>
     </section>
   </div>

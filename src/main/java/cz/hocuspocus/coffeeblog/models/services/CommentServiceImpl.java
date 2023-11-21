@@ -6,9 +6,7 @@ import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.CommentRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
-import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
-import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.CommentMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService{
@@ -75,11 +73,13 @@ public class CommentServiceImpl implements CommentService{
      * @param articleId will be taken from URL
      */
     @Override
-    public void create(CommentDTO comment, long articleId){
+    public void create(CommentDTO comment, long articleId) {
         comment.setDate(LocalDateTime.now());
         comment.setUser(getLoggedUser());
+
         ArticleEntity articleById = articleRepository.findById(articleId).orElseThrow(ArticleNotFoundException::new);
         comment.setArticle(articleById);
+
         CommentEntity newComment = commentMapper.toEntity(comment);
         commentRepository.save(newComment);
     }

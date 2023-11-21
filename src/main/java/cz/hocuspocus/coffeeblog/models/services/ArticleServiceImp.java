@@ -8,6 +8,7 @@ import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -29,6 +30,7 @@ public class ArticleServiceImp implements ArticleService{
     @Override
     public void create(ArticleDTO article){
         // we map data from DTO to Entity here
+        article.setDate(LocalDateTime.now());
         ArticleEntity newArticle = articleMapper.toEntity(article);
 
         articleRepository.save(newArticle);

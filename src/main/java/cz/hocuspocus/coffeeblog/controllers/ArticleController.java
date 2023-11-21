@@ -73,6 +73,9 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+    /*
+    Post method for creating a comment
+     */
     @PostMapping("{articleId}/createComment")
     public String createComment(
             @PathVariable long articleId,
@@ -105,7 +108,6 @@ public class ArticleController {
         model.addAttribute("comments",comments);
         model.addAttribute("article", article);
         model.addAttribute("commentDTO", new CommentDTO());
-        System.out.println("ArticleId "  + articleId);
         model.addAttribute("articleId", articleId);
 
         return "pages/articles/detail";
