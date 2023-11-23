@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+    <div id="centrovac" class="domu-article">
+        <header>
+            <h1>About me</h1>
+        </header>
+
+        <section>
+            <p>
+                Welcome to Pheasant under pressure! Coffee blog for coffee lovers.
+            </p>
+            <p>
+                My name is Michal, I am 30 y.o. and I am coffee fanatic! You can contact me on my
+                <a th:href="@{/contact}">contact page</a>.
+            </p>
+            <p>I love everything speciality coffee related. I like drinking good coffee, I also prepare it at home with espresso machine,
+            chemex, V60, aeropress and in may other styles. I also love visiting coffee festivals, workshops, courses and other related ocasions.</p>
+            <p>
+                Besides that, I am also a
+                <strong>programmer</strong>!
+            </p>
+
+            <p class="tlacitko-odstavec">
+                <a th:href="@{/references}" class="reference-tlacitko">My references</a>
+            </p>
+        </section>
+
+        <img th:src="@{/images/avatar.jpg}" width="600px" alt="Coffee lover Michal"/>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+</html>

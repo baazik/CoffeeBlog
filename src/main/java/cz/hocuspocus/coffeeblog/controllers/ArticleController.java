@@ -1,5 +1,7 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
+import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
+import cz.hocuspocus.coffeeblog.data.lists.Articles;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
@@ -8,6 +10,7 @@ import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import cz.hocuspocus.coffeeblog.models.services.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +35,33 @@ public class ArticleController {
     private ArticleMapper articleMapper;
 
 
+    private String addPaginationModel(int page, Page<ArticleEntity> paginated, Model model) {
+        List<ArticleEntity> listArticles = paginated.getContent(); // vytvori seznam clanku na aktualni strance z objektu paginated
+		/*
+		ulozeni promennych do promennych pro html sablonu
+		 */
+        model.addAttribute("article", new ArticleEntity());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", paginated.getTotalPages());
+        model.addAttribute("totalItems", paginated.getTotalElements());
+        model.addAttribute("listArticles", listArticles);
+        return "pages/articles/index";
+
+    }
+
+    @GetMapping
+    public String renderIndex(@RequestParam(defaultValue = "1") int page, Model model) {
+        // Here we are returning an object of type 'Donates' rather than a collection of Donate
+        // objects so it is simpler for Object-Xml mapping
+
+        Articles articles = new Articles();
+        Page<ArticleEntity> paginated = articleService.findPaginated(page); // vrati vysledek na jedne strance z db donates
+        articles.getArticlesList().addAll(paginated.toList()); // vytvori arraylist, do ktereho se prida predchozi vysledek
+        return addPaginationModel(page, paginated, model); // zavola se metoda viz nize, ktera prida data do modelu
+    }
+
     /*
     Giving the list of articles to model for view
-     */
     @GetMapping
     public String renderIndex(Model model)
     {
@@ -42,6 +69,7 @@ public class ArticleController {
         model.addAttribute("articles",articles);
         return "pages/articles/index";
     }
+     */
 
     /*
     Getting the create form for view

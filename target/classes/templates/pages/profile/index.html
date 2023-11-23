@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
+<div class="centrovac">
+    <header>
+    <h1>User Profile</h1>
+    </header>
+    <section>
+    <table>
+        <tr>
+            <td>First name:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.firstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.lastName}"></td>
+        </tr>
+        <tr>
+            <td>Nickname:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.nickName}"></td>
+        </tr>
+        <tr>
+            <td>Birthday:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.birthday}"></td>
+        </tr>
+        <tr>
+            <td>Interests:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.interests}"></td>
+        </tr>
+        <tr>
+            <td>About me:</td>
+            <td th:if="${loggedUserDTO != null}" th:text="${loggedUserDTO.aboutMe}"></td>
+        </tr>
+        <tr>
+            <td>Age:</td>
+            <td th:text="${loggedUserDTO.age}"></td>
+        </tr>
+    </table>
+        <a th:href="@{'/profile/edit/' + ${loggedUserDTO.id}}">Edit profile</a>
+    </section>
+</div>
+
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+
+</html>

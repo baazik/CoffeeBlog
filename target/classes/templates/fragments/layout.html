@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:fragment="head">
+
+  <meta charset="utf-8"/>
+  <meta name="description" content="CoffeeBlog - Pheasant under pressure"/>
+  <meta name="keywords" content="portfolio, coffee, blog"/>
+  <meta name="author" content="Pheasant Under Pressure"/>
+  <title>CoffeeBlog - Pheasant under pressure</title>
+
+
+  <link rel="stylesheet" th:href="@{/styles/lightbox.min.css}" type="text/css"/>
+  <link rel="stylesheet" th:href="@{/styles/bootstrap.min.css}" type="text/css"/>
+  <link rel="stylesheet" th:href="@{/styles/styles.css}" type="text/css"/>
+  <link rel="shortcut icon" th:href="@{/images/ikona.ico}"/>
+
+  <script th:src="@{/scripts/lightbox-plus-jquery.min.js}"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
+  <script>
+        tinymce.init({
+            selector: "textarea[id*=content]",
+            entities: "160,nbsp",
+            entity_encoding: "named",
+            entity_encoding: "raw",
+            plugins: "image",
+            menubar: "insert"
+        });
+    </script>
+
+</head>
+
+<body>
+
+<header th:fragment="header">
+  <div id="logo">
+    <h1>CoffeeBlog<span>Pheasant under pressure</span></h1>
+    <small>coffeeblog for coffee lovers</small>
+  </div>
+  <nav>
+    <ul>
+      <li><a th:href="@{/}">Home</a></li>
+      <li><a th:href="@{/articles}">Articles</a></li>
+      <li><a th:href="@{/skills}">Coffee Skills</a></li>
+      <li><a th:href="@{/references}">References</a></li>
+      <li><a class="kontakt-tlacitko" th:href="@{/contact}">Contact</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropbtn">Account</a>
+        <div class="dropdown-content">
+          <a sec:authorize="isAnonymous()" th:href="@{/account/login}" class="dropdown-link">Login</a>
+          <a sec:authorize="isAnonymous()" th:href="@{/account/register}" class="dropdown-link">Sign up</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/changepassword}" class="dropdown-link">Change password</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">My user profile</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Users</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" class="dropdown-link">Logout</a>
+          <!--
+          <form sec:authorize="isAuthenticated()" method="post" th:action="@{/account/logout}">
+            <button class="btn text-white">Logout</button>
+          </form>
+          -->
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+<footer th:fragment="footer">
+  Created by &copy;Michal Bažant 2023
+</footer>
+
+</body>
+</html>

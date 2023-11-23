@@ -6,6 +6,10 @@ import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -97,5 +101,12 @@ public class ArticleServiceImp implements ArticleService{
         articleRepository.delete(fetchedEntity);
     }
 
+    @Override
+    public Page<ArticleEntity> findPaginated(int page) {
+        int pageSize = 5;
+        //Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("date").descending());
+        return articleRepository.findAll(pageable);
+    }
 
 }

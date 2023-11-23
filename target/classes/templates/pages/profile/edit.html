@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
+<article>
+    <div id="centrovac">
+        <header>
+            <h1>Edit Profile</h1>
+        </header>
+
+        <section>
+            <form class="d-flex flex-column gap-2" method="post"
+                  th:action="@{'/profile/edit/' + ${profileId}}" th:object="${profileDTO}">
+                <div class="form-group">
+                    <label for="firstName" class="control-label">First Name</label>
+                    <input id="firstName" th:field="*{firstName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName" class="control-label">Last Name</label>
+                    <input id="lastName" th:field="*{lastName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('lastName')}"
+                           th:errors="*{lastName}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nickName" class="control-label">Nickname</label>
+                    <input id="nickName" th:field="*{nickName}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('nickName')}"
+                           th:errors="*{nickName}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthday" class="control-label">Birthday</label>
+                    <input name="birthday" id="birthday" type="date" th:value="*{birthday}" class="form-control" />
+                    <p>Birthday will not be visible on the web. Only your age.</p>
+                    <small class="text-danger" th:if="${#fields.hasErrors('birthday')}"
+                           th:errors="*{birthday}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="interests" class="control-label">Interests</label>
+                    <input id="interests" th:field="*{interests}" class="form-control" />
+                    <small class="text-danger" th:if="${#fields.hasErrors('interests')}"
+                           th:errors="*{interests}"></small>
+                </div>
+
+                <div class="form-group">
+                    <label for="aboutMe" class="control-label">About Me</label>
+                    <textarea id="aboutMe" class="form-control" th:field="*{aboutMe}"></textarea>
+                    <small class="text-danger" th:if="${#fields.hasErrors('aboutMe')}"
+                           th:errors="*{aboutMe}"></small>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="clanky-tlacitko">Save</button>
+                </div>
+            </form>
+
+            <a class="clanky-tlacitko" th:href="@{/profile/userprofile}">Back to Profile</a>
+        </section>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+
+</html>
