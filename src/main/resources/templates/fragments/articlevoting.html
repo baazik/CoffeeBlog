@@ -2,18 +2,21 @@
   <p>Karma: <span th:text="${article.karma}"></span></p>
 
   <div sec:authorize="isAuthenticated()" class="list-group-item">
-    <form method="post" th:action="@{/articles/voteUp}">
+    <form method="post" th:action="@{/articles/voteUp}" class="vote-form">
       <input type="hidden" name="articleId" th:value="${article.articleId}" />
       <input type="hidden" name="userId" th:value="${userId}" />
-      <button type="submit">Vote Up</button>
+      <button type="submit" class="vote-button" id="voteUpButton">
+        <img src="/images/palec-nahoru.jpg" alt="Palec nahoru" class="vote-icon" />
+      </button>
     </form>
 
     <!-- Tlačítko pro hlasování dolů -->
-    <form method="post" th:action="@{/articles/voteDown}">
+    <form method="post" th:action="@{/articles/voteDown}" class="vote-form">
       <input type="hidden" name="articleId" th:value="${article.articleId}" />
       <input type="hidden" name="userId" th:value="${userId}" />
-      <button type="submit">Vote Down</button>
+      <button type="submit" class="vote-button" id="voteDownButton">
+        <img src="/images/palec-dolu.jpg" alt="Palec dolů" class="vote-icon" />
+      </button>
     </form>
   </div>
-
 </div>

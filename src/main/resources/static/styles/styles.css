@@ -286,3 +286,22 @@ Flash messages
   display: block;
   width: 200px;
 }
+
+.vote-form {
+  display: flex;
+}
+
+/* Přidáme mezery mezi obrázky */
+.vote-button {
+  margin-right: 5px;
+}
+
+.vote-icon {
+  width: 40px;
+  height: 40px;
+}
+
+/* Přidáme styl pro zvýraznění tlačítek po najetí myší */
+.vote-button:hover .vote-icon {
+  filter: brightness(120%);
+}

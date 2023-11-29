@@ -127,6 +127,11 @@ public class ArticleController {
             return renderDetail(articleId, model);
         }
 
+        if (comment.getComment().isEmpty()){
+            redirectAttributes.addFlashAttribute("error", "The comment cannot be empty.");
+            return "redirect:/articles/{articleId}";
+        }
+
         // if there are no errors in form fields, we save the comment to DB and redirect the user to articles
         commentService.create(comment, articleId);
         redirectAttributes.addFlashAttribute("success", "The comment was successfully created.");
