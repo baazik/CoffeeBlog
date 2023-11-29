@@ -1,11 +1,5 @@
 <div th:fragment="comments">
     <h2>Comments</h2>
-    <li th:each="comment: ${comments}" class="list-group-item">
-        <p th:text="${comment.comment}"></p>
-        <p th:text="${#temporals.format(comment.date, 'dd.MM. yyyy HH:mm')}"></p>
-        <p th:text="${comment.user.nickName}"></p>
-    </li>
-    <br>
     <li sec:authorize="isAuthenticated()" class="list-group-item">
         <form class="d-flex flex-column gap-2"
               method="post"
@@ -15,7 +9,7 @@
             <input type="hidden" id="articleId" name="articleId" th:value="${articleId}" />
 
             <div class="form-group">
-                <label for="comment" class="control-label">Comment</label>
+                <label for="comment" class="control-label"></label>
                 <textarea id="comment" class="form-control" th:field="*{comment}"></textarea>
                 <small class="text-danger" th:errors="*{comment}"></small>
             </div>
@@ -23,6 +17,12 @@
                 <button type="submit" class="clanky-tlacitko">Add comment</button>
             </div>
         </form>
+    </li>
+    <br>
+    <li th:each="comment: ${comments}" class="list-group-item">
+        <p th:text="${comment.comment}"></p>
+        <p th:text="${#temporals.format(comment.date, 'dd.MM. yyyy HH:mm')}"></p>
+        <p th:text="${comment.user.nickName}"></p>
     </li>
     <br><br>
 </div>

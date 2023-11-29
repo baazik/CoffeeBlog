@@ -1,0 +1,19 @@
+<div th:fragment="articlevoting">
+  <p>Karma: <span th:text="${article.karma}"></span></p>
+
+  <div sec:authorize="isAuthenticated()" class="list-group-item">
+    <form method="post" th:action="@{/articles/voteUp}">
+      <input type="hidden" name="articleId" th:value="${article.articleId}" />
+      <input type="hidden" name="userId" th:value="${userId}" />
+      <button type="submit">Vote Up</button>
+    </form>
+
+    <!-- Tlačítko pro hlasování dolů -->
+    <form method="post" th:action="@{/articles/voteDown}">
+      <input type="hidden" name="articleId" th:value="${article.articleId}" />
+      <input type="hidden" name="userId" th:value="${userId}" />
+      <button type="submit">Vote Down</button>
+    </form>
+  </div>
+
+</div>

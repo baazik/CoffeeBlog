@@ -13,6 +13,8 @@ public interface UserService extends UserDetailsService {
 
     UserDTO getLoggedUserDTO();
 
+    UserEntity getLoggedUserEntity();
+
     UserEntity getUserOrThrow(long userId);
 
 }

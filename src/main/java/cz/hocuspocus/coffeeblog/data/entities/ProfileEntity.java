@@ -96,4 +96,5 @@ public class ProfileEntity {
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
+
 }

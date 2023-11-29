@@ -12,3 +12,4 @@ public class CoffeeBlogApplication {
         SpringApplication.run(CoffeeBlogApplication.class, args);
     }
 }
+

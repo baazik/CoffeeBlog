@@ -1,6 +1,8 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
+import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
+import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
@@ -15,10 +17,19 @@ public interface ArticleService {
 
     ArticleDTO getById(long articleId);
 
+    ArticleEntity getEntityById(long articleId);
+
     void edit(ArticleDTO article);
 
     void remove(long ArticleId);
 
     Page<ArticleEntity> findPaginated(int page);
+
+    boolean hasUserRated(ArticleEntity article, UserEntity user);
+
+    void updateKarma(ArticleEntity article);
+
+    void saveRating (ArticleRatingEntity rating);
+
 
 }

@@ -26,6 +26,8 @@ public class ArticleDTO {
 
     private LocalDateTime date;
 
+    private int karma;
+
     //region: Getters and setters
     public String getTitle() {
         return title;
@@ -68,4 +70,12 @@ public class ArticleDTO {
     }
     //endregion
 
+
+    public int getKarma() {
+        return karma;
+    }
+
+    public void setKarma(int karma) {
+        this.karma = karma;
+    }
 }

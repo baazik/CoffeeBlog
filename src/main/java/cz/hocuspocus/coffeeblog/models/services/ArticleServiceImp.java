@@ -1,6 +1,9 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
+import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
+import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
+import cz.hocuspocus.coffeeblog.data.repositories.ArticleRatingRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
@@ -21,6 +24,9 @@ public class ArticleServiceImp implements ArticleService{
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleRatingRepository articleRatingRepository;
 
     @Autowired
     private ArticleMapper articleMapper;
@@ -75,6 +81,12 @@ public class ArticleServiceImp implements ArticleService{
         return articleMapper.toDTO(fetchedArticle);
     }
 
+    @Override
+    public ArticleEntity getEntityById(long articleId) {
+        ArticleEntity fetchedArticle = getArticleOrThrow(articleId);
+        return fetchedArticle;
+    }
+
     /**
      * We edit an article
      * We create a new instance of ArticleEntity fetchedArticle and we "connect" it with ArticleDTO article with id
@@ -104,9 +116,32 @@ public class ArticleServiceImp implements ArticleService{
     @Override
     public Page<ArticleEntity> findPaginated(int page) {
         int pageSize = 5;
-        //Pageable pageable = PageRequest.of(page - 1, pageSize);
         Pageable pageable = PageRequest.of(page - 1, pageSize, Sort.by("date").descending());
         return articleRepository.findAll(pageable);
     }
+
+    @Override
+    public boolean hasUserRated(ArticleEntity article, UserEntity user) {
+        for (ArticleRatingEntity rating : article.getUserRatings()) {
+            if (rating.getUser().equals(user)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void updateKarma(ArticleEntity article) {
+        List<ArticleRatingEntity> ratings = articleRatingRepository.findByArticle(article);
+        int totalRating = ratings.stream().mapToInt(ArticleRatingEntity::getRating).sum();
+        article.setKarma(totalRating);
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void saveRating (ArticleRatingEntity rating){
+        articleRatingRepository.save(rating);
+    }
+
 
 }

@@ -1,5 +1,7 @@
 package cz.hocuspocus.coffeeblog.models.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -95,5 +97,4 @@ public class ProfileDTO {
             this.age = 0;
         }
     }
-
 }

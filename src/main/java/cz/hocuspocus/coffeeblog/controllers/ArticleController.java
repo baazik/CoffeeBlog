@@ -1,6 +1,9 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
+import com.fasterxml.jackson.databind.DatabindContext;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
+import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
+import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.lists.Articles;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
@@ -8,10 +11,14 @@ import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import cz.hocuspocus.coffeeblog.models.services.CommentService;
+import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,10 +39,13 @@ public class ArticleController {
     private CommentService commentService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ArticleMapper articleMapper;
 
 
-    private String addPaginationModel(int page, Page<ArticleEntity> paginated, Model model) {
+    private String addArticlesPaginationModel(int page, Page<ArticleEntity> paginated, Model model) {
         List<ArticleEntity> listArticles = paginated.getContent(); // vytvori seznam clanku na aktualni strance z objektu paginated
 		/*
 		ulozeni promennych do promennych pro html sablonu
@@ -57,7 +67,7 @@ public class ArticleController {
         Articles articles = new Articles();
         Page<ArticleEntity> paginated = articleService.findPaginated(page); // vrati vysledek na jedne strance z db donates
         articles.getArticlesList().addAll(paginated.toList()); // vytvori arraylist, do ktereho se prida predchozi vysledek
-        return addPaginationModel(page, paginated, model); // zavola se metoda viz nize, ktera prida data do modelu
+        return addArticlesPaginationModel(page, paginated, model); // zavola se metoda viz nize, ktera prida data do modelu
     }
 
     /*
@@ -202,5 +212,79 @@ public class ArticleController {
         redirectAttributes.addFlashAttribute("error","The article was not found.");
         return "redirect:/articles";
     }
+
+    @PostMapping("voteUp")
+    public String voteUp(
+            @RequestParam long articleId,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ){
+        try {
+            ArticleEntity article = articleService.getEntityById(articleId);
+            UserEntity user = userService.getLoggedUserEntity();
+            model.addAttribute("userId",user.getUserId());
+
+
+
+            if (user == null) {
+                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
+            } else if(articleService.hasUserRated(article,user)){
+                redirectAttributes.addFlashAttribute("error", "The user has already voted for the article.");
+            } else {
+                ArticleRatingEntity rating = new ArticleRatingEntity();
+                rating.setUser(user);
+                rating.setArticle(article);
+                rating.setRating(1);
+                articleService.saveRating(rating);
+
+                articleService.updateKarma(article);
+                redirectAttributes.addFlashAttribute("success", "The voting was successful.");
+                return "redirect:/articles/" + articleId;
+            }
+            return "redirect:/articles/" + articleId;
+        } catch (Exception e){
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error while voting up.");
+            return "redirect:/articles/" + articleId;
+        }
+    }
+
+    @PostMapping("voteDown")
+    public String voteDown(
+            @RequestParam long articleId,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ){
+        try {
+            ArticleEntity article = articleService.getEntityById(articleId);
+            UserEntity user = userService.getLoggedUserEntity();
+            model.addAttribute("userId",user.getUserId());
+
+            if (user == null) {
+                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
+            } else if(articleService.hasUserRated(article,user)){
+                redirectAttributes.addFlashAttribute("error", "The user has already voted for the article.");
+            } else {
+                ArticleRatingEntity rating = new ArticleRatingEntity();
+                rating.setUser(user);
+                rating.setArticle(article);
+                rating.setRating(-1);
+                articleService.saveRating(rating);
+
+                articleService.updateKarma(article);
+                redirectAttributes.addFlashAttribute("success", "The voting was successful.");
+                return "redirect:/articles/" + articleId;
+            }
+            return "redirect:/articles/" + articleId;
+        } catch (Exception e){
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error while voting up.");
+            return "redirect:/articles/" + articleId;
+        }
+    }
+
+
+
+
 
 }

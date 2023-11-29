@@ -30,6 +30,11 @@ public class ArticleEntity {
     @OrderBy("date DESC")
     private List<CommentEntity> comments = new ArrayList<>();
 
+    @Column(nullable = false)
+    private int karma;
+
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    private List<ArticleRatingEntity> userRatings = new ArrayList<>();
 
     public long getArticleId() {
         return articleId;
@@ -77,5 +82,21 @@ public class ArticleEntity {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public List<ArticleRatingEntity> getUserRatings() {
+        return userRatings;
+    }
+
+    public void setUserRatings(List<ArticleRatingEntity> userRatings) {
+        this.userRatings = userRatings;
+    }
+
+    public int getKarma() {
+        return karma;
+    }
+
+    public void setKarma(int karma) {
+        this.karma = karma;
     }
 }

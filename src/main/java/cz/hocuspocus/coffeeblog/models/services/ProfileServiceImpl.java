@@ -14,7 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -87,6 +90,12 @@ public class ProfileServiceImpl implements ProfileService{
         userMapper.updateUserEntity(user, fetchedUser);
         profileRepository.save(fetchedProfile);
         userRepository.save(fetchedUser);
+    }
+
+    // Metoda pro ukládání obrázku do Base64
+    private String saveProfileImage(String profileImage) throws IOException {
+        byte[] imageBytes = profileImage.getBytes();
+        return Base64.getEncoder().encodeToString(imageBytes);
     }
 
 

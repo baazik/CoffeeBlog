@@ -4,7 +4,9 @@ import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.ProfileDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ProfileService{
