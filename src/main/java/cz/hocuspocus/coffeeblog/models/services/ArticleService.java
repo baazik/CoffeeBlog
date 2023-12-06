@@ -29,6 +29,12 @@ public interface ArticleService {
 
     void updateKarma(ArticleEntity article);
 
+    void updateVotes(ArticleEntity article);
+
+    void upVote (ArticleEntity article, UserEntity user);
+
+    void downVote (ArticleEntity article, UserEntity user);
+
     void saveRating (ArticleRatingEntity rating);
 
 

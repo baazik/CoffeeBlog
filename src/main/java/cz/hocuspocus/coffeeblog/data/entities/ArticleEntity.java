@@ -33,6 +33,12 @@ public class ArticleEntity {
     @Column(nullable = false)
     private int karma;
 
+    @Column(nullable = false)
+    private int upVotes;
+
+    @Column(nullable = false)
+    private int downVotes;
+
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleRatingEntity> userRatings = new ArrayList<>();
 
@@ -98,5 +104,21 @@ public class ArticleEntity {
 
     public void setKarma(int karma) {
         this.karma = karma;
+    }
+
+    public int getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(int upVotes) {
+        this.upVotes = upVotes;
+    }
+
+    public int getDownVotes() {
+        return downVotes;
+    }
+
+    public void setDownVotes(int downVotes) {
+        this.downVotes = downVotes;
     }
 }

@@ -121,6 +121,28 @@ public class ArticleServiceImp implements ArticleService{
     }
 
     @Override
+    public void upVote(ArticleEntity article, UserEntity user){
+        ArticleRatingEntity rating = new ArticleRatingEntity();
+        rating.setUser(user);
+        rating.setArticle(article);
+        rating.setRating(1);
+        saveRating(rating);
+        updateKarma(article);
+        updateVotes(article);
+    }
+
+    @Override
+    public void downVote(ArticleEntity article, UserEntity user){
+        ArticleRatingEntity rating = new ArticleRatingEntity();
+        rating.setUser(user);
+        rating.setArticle(article);
+        rating.setRating(-1);
+        saveRating(rating);
+        updateKarma(article);
+        updateVotes(article);
+    }
+
+    @Override
     public boolean hasUserRated(ArticleEntity article, UserEntity user) {
         for (ArticleRatingEntity rating : article.getUserRatings()) {
             if (rating.getUser().equals(user)) {
@@ -135,6 +157,27 @@ public class ArticleServiceImp implements ArticleService{
         List<ArticleRatingEntity> ratings = articleRatingRepository.findByArticle(article);
         int totalRating = ratings.stream().mapToInt(ArticleRatingEntity::getRating).sum();
         article.setKarma(totalRating);
+        articleRepository.save(article);
+    }
+
+    @Override
+    public void updateVotes(ArticleEntity article){
+        List<ArticleRatingEntity> ratings = articleRatingRepository.findByArticle(article);
+
+        int upVotes = 0;
+        int downVotes = 0;
+
+        for (ArticleRatingEntity rating : ratings) {
+            if (rating.getRating() == 1) {
+                upVotes++;
+            } else if (rating.getRating() == -1) {
+                downVotes++;
+            }
+        }
+
+        article.setUpVotes(upVotes);
+        article.setDownVotes(downVotes);
+
         articleRepository.save(article);
     }
 

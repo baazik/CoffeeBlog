@@ -236,13 +236,7 @@ public class ArticleController {
             } else if(articleService.hasUserRated(article,user)){
                 redirectAttributes.addFlashAttribute("error", "The user has already voted for the article.");
             } else {
-                ArticleRatingEntity rating = new ArticleRatingEntity();
-                rating.setUser(user);
-                rating.setArticle(article);
-                rating.setRating(1);
-                articleService.saveRating(rating);
-
-                articleService.updateKarma(article);
+                articleService.upVote(article,user);
                 redirectAttributes.addFlashAttribute("success", "The voting was successful.");
                 return "redirect:/articles/" + articleId;
             }
@@ -270,13 +264,7 @@ public class ArticleController {
             } else if(articleService.hasUserRated(article,user)){
                 redirectAttributes.addFlashAttribute("error", "The user has already voted for the article.");
             } else {
-                ArticleRatingEntity rating = new ArticleRatingEntity();
-                rating.setUser(user);
-                rating.setArticle(article);
-                rating.setRating(-1);
-                articleService.saveRating(rating);
-
-                articleService.updateKarma(article);
+                articleService.downVote(article,user);
                 redirectAttributes.addFlashAttribute("success", "The voting was successful.");
                 return "redirect:/articles/" + articleId;
             }

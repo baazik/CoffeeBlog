@@ -28,6 +28,10 @@ public class ArticleDTO {
 
     private int karma;
 
+    private int upVotes;
+
+    private int downVotes;
+
     //region: Getters and setters
     public String getTitle() {
         return title;
@@ -77,5 +81,21 @@ public class ArticleDTO {
 
     public void setKarma(int karma) {
         this.karma = karma;
+    }
+
+    public int getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(int upVotes) {
+        this.upVotes = upVotes;
+    }
+
+    public int getDownVotes() {
+        return downVotes;
+    }
+
+    public void setDownVotes(int downVotes) {
+        this.downVotes = downVotes;
     }
 }

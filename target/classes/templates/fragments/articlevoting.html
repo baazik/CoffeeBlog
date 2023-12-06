@@ -1,5 +1,7 @@
 <div th:fragment="articlevoting">
-  <p>Karma: <span th:text="${article.karma}"></span></p>
+  <p>Upvotes: <span th:text="${article.upVotes}"></span><br>
+  Downvotes: <span th:text="${article.downVotes}"></span><br>
+  Karma: <span th:text="${article.karma}"></span></p>
 
   <div sec:authorize="isAuthenticated()" class="list-group-item">
     <form method="post" th:action="@{/articles/voteUp}" class="vote-form">
