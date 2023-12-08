@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-06T09:24:35+0100",
+    date = "2023-12-06T15:50:57+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
@@ -21,10 +21,14 @@ public class CommentMapperImpl implements CommentMapper {
 
         CommentEntity commentEntity = new CommentEntity();
 
+        commentEntity.setId( source.getId() );
         commentEntity.setComment( source.getComment() );
         commentEntity.setDate( source.getDate() );
         commentEntity.setArticle( source.getArticle() );
         commentEntity.setUser( source.getUser() );
+        commentEntity.setKarma( source.getKarma() );
+        commentEntity.setUpVotes( source.getUpVotes() );
+        commentEntity.setDownVotes( source.getDownVotes() );
 
         return commentEntity;
     }
@@ -41,6 +45,10 @@ public class CommentMapperImpl implements CommentMapper {
         commentDTO.setComment( source.getComment() );
         commentDTO.setDate( source.getDate() );
         commentDTO.setArticle( source.getArticle() );
+        commentDTO.setKarma( source.getKarma() );
+        commentDTO.setUpVotes( source.getUpVotes() );
+        commentDTO.setDownVotes( source.getDownVotes() );
+        commentDTO.setId( source.getId() );
 
         return commentDTO;
     }
@@ -55,6 +63,10 @@ public class CommentMapperImpl implements CommentMapper {
         target.setComment( source.getComment() );
         target.setDate( source.getDate() );
         target.setArticle( source.getArticle() );
+        target.setKarma( source.getKarma() );
+        target.setUpVotes( source.getUpVotes() );
+        target.setDownVotes( source.getDownVotes() );
+        target.setId( source.getId() );
     }
 
     @Override
@@ -63,9 +75,13 @@ public class CommentMapperImpl implements CommentMapper {
             return;
         }
 
+        target.setId( source.getId() );
         target.setComment( source.getComment() );
         target.setDate( source.getDate() );
         target.setArticle( source.getArticle() );
         target.setUser( source.getUser() );
+        target.setKarma( source.getKarma() );
+        target.setUpVotes( source.getUpVotes() );
+        target.setDownVotes( source.getDownVotes() );
     }
 }

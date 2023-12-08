@@ -3,8 +3,10 @@ package cz.hocuspocus.coffeeblog.controllers;
 import com.fasterxml.jackson.databind.DatabindContext;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
+import cz.hocuspocus.coffeeblog.data.entities.CommentEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.lists.Articles;
+import cz.hocuspocus.coffeeblog.data.repositories.CommentRepository;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
@@ -27,6 +29,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
@@ -43,6 +46,9 @@ public class ArticleController {
 
     @Autowired
     private ArticleMapper articleMapper;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
 
     private String addArticlesPaginationModel(int page, Page<ArticleEntity> paginated, Model model) {
@@ -218,6 +224,9 @@ public class ArticleController {
         return "redirect:/articles";
     }
 
+    /*
+    Post method for "like"
+     */
     @PostMapping("voteUp")
     public String voteUp(
             @RequestParam long articleId,
@@ -229,8 +238,11 @@ public class ArticleController {
             UserEntity user = userService.getLoggedUserEntity();
             model.addAttribute("userId",user.getUserId());
 
-
-
+            /*
+            If user is not logged, he gets an error.
+            If user is logged, but already voted for the article, also gets an error
+            Else - the upvote will be done
+             */
             if (user == null) {
                 redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
             } else if(articleService.hasUserRated(article,user)){
@@ -248,6 +260,9 @@ public class ArticleController {
         }
     }
 
+    /*
+    Post method for "dislike"
+     */
     @PostMapping("voteDown")
     public String voteDown(
             @RequestParam long articleId,
@@ -259,6 +274,11 @@ public class ArticleController {
             UserEntity user = userService.getLoggedUserEntity();
             model.addAttribute("userId",user.getUserId());
 
+            /*
+            If user is not logged, he gets an error.
+            If user is logged, but already voted for the article, also gets an error
+            Else - the downvote will be done
+             */
             if (user == null) {
                 redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
             } else if(articleService.hasUserRated(article,user)){
@@ -276,8 +296,54 @@ public class ArticleController {
         }
     }
 
+    @PostMapping("comment/{commentId}/voteUp")
+    public String commentVoteUp(
+            @PathVariable long commentId,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        try {
+            CommentEntity comment = commentService.getCommentEntityById(commentId);
+            UserEntity user = userService.getLoggedUserEntity();
+            model.addAttribute("userId", user.getUserId());
 
+            if (user == null) {
+                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
+            } else if(commentService.hasUserRated(comment, user)){
+            } else {
+                commentService.upVote(comment, user);
+            }
+            return "redirect:/articles/" + comment.getArticle().getArticleId() + "#comment-" + comment.getId();
+        } catch (Exception e){
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error while voting.");
+            return "redirect:/articles/";
+        }
+    }
 
+    @PostMapping("comment/{commentId}/voteDown")
+    public String commentVoteDown(
+            @PathVariable long commentId,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        try {
+            CommentEntity comment = commentService.getCommentEntityById(commentId);
+            UserEntity user = userService.getLoggedUserEntity();
+            model.addAttribute("userId", user.getUserId());
 
+            if (user == null) {
+                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
+            } else if(commentService.hasUserRated(comment, user)){
+            } else {
+                commentService.downVote(comment, user);
+            }
+            return "redirect:/articles/" + comment.getArticle().getArticleId() + "#comment-" + comment.getId();
+        } catch (Exception e){
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Error while voting.");
+            return "redirect:/articles/";
+        }
+    }
 
 }

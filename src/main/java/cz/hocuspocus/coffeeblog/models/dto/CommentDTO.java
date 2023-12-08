@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 
 public class CommentDTO {
 
+    private long id;
+
     private LocalDateTime date;
 
     private String comment;
@@ -17,6 +19,12 @@ public class CommentDTO {
 
     // Comment has link to Article
     private ArticleEntity article;
+
+    private int karma;
+
+    private int upVotes;
+
+    private int downVotes;
 
     public UserEntity getUser() {
         return user;
@@ -48,5 +56,37 @@ public class CommentDTO {
 
     public void setArticle(ArticleEntity article) {
         this.article = article;
+    }
+
+    public int getKarma() {
+        return karma;
+    }
+
+    public void setKarma(int karma) {
+        this.karma = karma;
+    }
+
+    public int getUpVotes() {
+        return upVotes;
+    }
+
+    public void setUpVotes(int upVotes) {
+        this.upVotes = upVotes;
+    }
+
+    public int getDownVotes() {
+        return downVotes;
+    }
+
+    public void setDownVotes(int downVotes) {
+        this.downVotes = downVotes;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

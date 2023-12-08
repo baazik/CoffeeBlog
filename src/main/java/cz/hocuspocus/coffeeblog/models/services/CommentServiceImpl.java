@@ -1,14 +1,14 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
-import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
-import cz.hocuspocus.coffeeblog.data.entities.CommentEntity;
-import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
+import cz.hocuspocus.coffeeblog.data.entities.*;
 import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
+import cz.hocuspocus.coffeeblog.data.repositories.CommentRatingRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.CommentRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.CommentMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
+import cz.hocuspocus.coffeeblog.models.exceptions.CommentNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,6 +32,21 @@ public class CommentServiceImpl implements CommentService{
 
     @Autowired
     private ArticleRepository articleRepository;
+
+    @Autowired
+    private CommentRatingRepository commentRatingRepository;
+
+    private CommentEntity getCommentOrThrow(long commentId) {
+        return commentRepository
+                .findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
+    }
+
+    @Override
+    public CommentEntity getCommentEntityById(long commentId) {
+        CommentEntity fetchedComment = getCommentOrThrow(commentId);
+        return fetchedComment;
+    }
 
     /**
      * We get logged user here as entity
@@ -82,6 +97,72 @@ public class CommentServiceImpl implements CommentService{
 
         CommentEntity newComment = commentMapper.toEntity(comment);
         commentRepository.save(newComment);
+    }
+
+    @Override
+    public boolean hasUserRated(CommentEntity comment, UserEntity user) {
+        for (CommentRatingEntity rating : comment.getUserRatings()) {
+            if (rating.getUser().equals(user)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void updateKarma(CommentEntity comment) {
+        List<CommentRatingEntity> ratings = commentRatingRepository.findByComment(comment);
+        int totalRating = ratings.stream().mapToInt(CommentRatingEntity::getRating).sum();
+        comment.setKarma(totalRating);
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public void updateVotes(CommentEntity comment){
+        List<CommentRatingEntity> ratings = commentRatingRepository.findByComment(comment);
+
+        int upVotes = 0;
+        int downVotes = 0;
+
+        for (CommentRatingEntity rating : ratings) {
+            if (rating.getRating() == 1) {
+                upVotes++;
+            } else if (rating.getRating() == -1) {
+                downVotes++;
+            }
+        }
+
+        comment.setUpVotes(upVotes);
+        comment.setDownVotes(downVotes);
+
+        commentRepository.save(comment);
+    }
+
+    @Override
+    public void saveRating (CommentRatingEntity rating){
+        commentRatingRepository.save(rating);
+    }
+
+    @Override
+    public void upVote(CommentEntity comment, UserEntity user){
+        CommentRatingEntity rating = new CommentRatingEntity();
+        rating.setUser(user);
+        rating.setComment(comment);
+        rating.setRating(1);
+        saveRating(rating);
+        updateKarma(comment);
+        updateVotes(comment);
+    }
+
+    @Override
+    public void downVote(CommentEntity comment, UserEntity user){
+        CommentRatingEntity rating = new CommentRatingEntity();
+        rating.setUser(user);
+        rating.setComment(comment);
+        rating.setRating(-1);
+        saveRating(rating);
+        updateKarma(comment);
+        updateVotes(comment);
     }
 
 }
