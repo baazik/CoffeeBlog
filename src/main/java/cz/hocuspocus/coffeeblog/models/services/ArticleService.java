@@ -37,5 +37,7 @@ public interface ArticleService {
 
     void saveRating (ArticleRatingEntity rating);
 
+    void visit (ArticleEntity article);
+
 
 }

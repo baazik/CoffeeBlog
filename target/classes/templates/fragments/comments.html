@@ -27,24 +27,25 @@
             Downvotes: <span th:text="${comment.downVotes}"></span>
             Karma: <span th:text="${comment.karma}"></span></p>
 
-        <div sec:authorize="isAuthenticated()" class="list-group-item">
+        <div sec:authorize="isAuthenticated()">
+            <!-- Tlačítko pro hlasování nahoru -->
             <form method="post" th:action="@{'/articles/comment/' + ${comment.id} + '/voteUp'}" class="vote-form">
                 <input type="hidden" name="commentId" th:value="${comment.id}" />
                 <input type="hidden" name="userId" th:value="${userId}" />
                 <button type="submit" class="vote-button" id="voteUpButton">
-                    <img src="/images/palec-nahoru.jpg" alt="Palec nahoru" class="vote-icon" />
+                    <img src="/images/palec-nahoru.png" alt="Palec nahoru" class="vote-icon" />
                 </button>
             </form>
 
             <!-- Tlačítko pro hlasování dolů -->
-            <div sec:authorize="isAuthenticated()" class="list-group-item">
-                <form method="post" th:action="@{'/articles/comment/' + ${comment.id} + '/voteDown'}" class="vote-form">
-                    <input type="hidden" name="commentId" th:value="${comment.id}" />
-                    <input type="hidden" name="userId" th:value="${userId}" />
-                    <button type="submit" class="vote-button" id="voteDownButton">
-                        <img src="/images/palec-nahoru.jpg" alt="Palec nahoru" class="vote-icon" />
-                    </button>
-                </form>
+            <form method="post" th:action="@{'/articles/comment/' + ${comment.id} + '/voteDown'}" class="vote-form">
+                <input type="hidden" name="commentId" th:value="${comment.id}" />
+                <input type="hidden" name="userId" th:value="${userId}" />
+                <button type="submit" class="vote-button" id="voteDownButton">
+                    <img src="/images/palec-dolu.png" alt="Palec nahoru" class="vote-icon" />
+                </button>
+            </form>
+        </div>
 
     </li>
     <br><br>

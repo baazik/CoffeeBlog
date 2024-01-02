@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-12-06T15:50:57+0100",
+    date = "2024-01-02T13:09:27+0100",
     comments = "version: 1.5.3.Final, compiler: javac, environment: Java 17.0.7 (Eclipse Adoptium)"
 )
 @Component
@@ -29,6 +29,7 @@ public class ArticleMapperImpl implements ArticleMapper {
         articleEntity.setKarma( source.getKarma() );
         articleEntity.setUpVotes( source.getUpVotes() );
         articleEntity.setDownVotes( source.getDownVotes() );
+        articleEntity.setVisit( source.getVisit() );
 
         return articleEntity;
     }
@@ -49,6 +50,7 @@ public class ArticleMapperImpl implements ArticleMapper {
         articleDTO.setKarma( source.getKarma() );
         articleDTO.setUpVotes( source.getUpVotes() );
         articleDTO.setDownVotes( source.getDownVotes() );
+        articleDTO.setVisit( source.getVisit() );
 
         return articleDTO;
     }
@@ -67,6 +69,7 @@ public class ArticleMapperImpl implements ArticleMapper {
         target.setKarma( source.getKarma() );
         target.setUpVotes( source.getUpVotes() );
         target.setDownVotes( source.getDownVotes() );
+        target.setVisit( source.getVisit() );
     }
 
     @Override
@@ -83,5 +86,6 @@ public class ArticleMapperImpl implements ArticleMapper {
         target.setKarma( source.getKarma() );
         target.setUpVotes( source.getUpVotes() );
         target.setDownVotes( source.getDownVotes() );
+        target.setVisit( source.getVisit() );
     }
 }

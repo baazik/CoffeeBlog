@@ -288,20 +288,27 @@ Flash messages
 }
 
 .vote-form {
-  display: flex;
+    display: flex;
+    background-color: none;
+}
+
+.vote-button {
+    border: none; /* Odstraní ohraničení */
+    background: none; /* Odstraní pozadí */
+    padding: 0; /* Odstraní výplň */
 }
 
 /* Přidáme mezery mezi obrázky */
-.vote-button {
-  margin-right: 5px;
+.vote-button:not(:last-child) {
+    margin-right: 5px;
 }
 
 .vote-icon {
-  width: 40px;
-  height: 40px;
+    width: 20px;
+    height: 20px;
 }
 
 /* Přidáme styl pro zvýraznění tlačítek po najetí myší */
 .vote-button:hover .vote-icon {
-  filter: brightness(120%);
+    filter: brightness(110%);
 }

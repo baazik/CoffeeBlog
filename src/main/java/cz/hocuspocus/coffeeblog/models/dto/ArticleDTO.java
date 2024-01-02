@@ -32,6 +32,8 @@ public class ArticleDTO {
 
     private int downVotes;
 
+    private int visit;
+
     //region: Getters and setters
     public String getTitle() {
         return title;
@@ -97,5 +99,13 @@ public class ArticleDTO {
 
     public void setDownVotes(int downVotes) {
         this.downVotes = downVotes;
+    }
+
+    public int getVisit() {
+        return visit;
+    }
+
+    public void setVisit(int visit) {
+        this.visit = visit;
     }
 }

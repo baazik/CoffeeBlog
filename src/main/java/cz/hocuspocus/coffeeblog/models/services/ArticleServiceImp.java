@@ -186,5 +186,11 @@ public class ArticleServiceImp implements ArticleService{
         updateVotes(article);
     }
 
+    @Override
+    public void visit(ArticleEntity article){
+        article.setVisit(article.getVisit() + 1);
+        articleRepository.save(article);
+    }
+
 
 }

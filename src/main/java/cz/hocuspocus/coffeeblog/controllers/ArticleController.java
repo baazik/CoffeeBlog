@@ -153,6 +153,8 @@ public class ArticleController {
             Model model
     ) {
         ArticleDTO article = articleService.getById(articleId);
+        ArticleEntity articleEntity = articleService.getEntityById(articleId);
+        articleService.visit(articleEntity);
         List<CommentDTO> comments = commentService.getByArticleId(articleId);
         model.addAttribute("comments",comments);
         model.addAttribute("article", article);

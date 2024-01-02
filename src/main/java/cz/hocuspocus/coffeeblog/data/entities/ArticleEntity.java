@@ -39,6 +39,9 @@ public class ArticleEntity {
     @Column(nullable = false)
     private int downVotes;
 
+    @Column(nullable = false)
+    private int visit;
+
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleRatingEntity> userRatings = new ArrayList<>();
 
@@ -120,5 +123,13 @@ public class ArticleEntity {
 
     public void setDownVotes(int downVotes) {
         this.downVotes = downVotes;
+    }
+
+    public int getVisit() {
+        return visit;
+    }
+
+    public void setVisit(int visit) {
+        this.visit = visit;
     }
 }
