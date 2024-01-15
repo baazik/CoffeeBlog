@@ -4,6 +4,8 @@ import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 
@@ -27,17 +29,13 @@ public interface ArticleService {
 
     boolean hasUserRated(ArticleEntity article, UserEntity user);
 
-    void updateKarma(ArticleEntity article);
-
     void updateVotes(ArticleEntity article);
 
     void upVote (ArticleEntity article, UserEntity user);
 
-    void downVote (ArticleEntity article, UserEntity user);
-
     void saveRating (ArticleRatingEntity rating);
 
-    void visit (ArticleEntity article);
+    void visit (ArticleEntity article, HttpServletRequest request, HttpServletResponse response);
 
 
 }

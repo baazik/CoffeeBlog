@@ -1,8 +1,6 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
-import com.fasterxml.jackson.databind.DatabindContext;
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
-import cz.hocuspocus.coffeeblog.data.entities.ArticleRatingEntity;
 import cz.hocuspocus.coffeeblog.data.entities.CommentEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
 import cz.hocuspocus.coffeeblog.data.lists.Articles;
@@ -14,22 +12,18 @@ import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.services.ArticleService;
 import cz.hocuspocus.coffeeblog.models.services.CommentService;
 import cz.hocuspocus.coffeeblog.models.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.web.server.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/articles")
@@ -77,17 +71,6 @@ public class ArticleController {
     }
 
     /*
-    Giving the list of articles to model for view
-    @GetMapping
-    public String renderIndex(Model model)
-    {
-        List<ArticleDTO> articles = articleService.getAll();
-        model.addAttribute("articles",articles);
-        return "pages/articles/index";
-    }
-     */
-
-    /*
     Getting the create form for view
      */
     @Secured("ROLE_ADMIN")
@@ -126,11 +109,13 @@ public class ArticleController {
             @Valid @ModelAttribute("commentDTO") CommentDTO comment,
             BindingResult result,
             Model model,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request,
+            HttpServletResponse response
     ) {
         // we ask if a user filled at least one field wrong - if he does, the form is shown again with error messages
         if (result.hasErrors()) {
-            return renderDetail(articleId, model);
+            return renderDetail(articleId, model, request, response);
         }
 
         if (comment.getComment().isEmpty()){
@@ -150,11 +135,13 @@ public class ArticleController {
     @GetMapping("{articleId}")
     public String renderDetail(
             @PathVariable long articleId,
-            Model model
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse response
     ) {
         ArticleDTO article = articleService.getById(articleId);
         ArticleEntity articleEntity = articleService.getEntityById(articleId);
-        articleService.visit(articleEntity);
+        articleService.visit(articleEntity, request, response);
         List<CommentDTO> comments = commentService.getByArticleId(articleId);
         model.addAttribute("comments",comments);
         model.addAttribute("article", article);
@@ -262,41 +249,6 @@ public class ArticleController {
         }
     }
 
-    /*
-    Post method for "dislike"
-     */
-    @PostMapping("voteDown")
-    public String voteDown(
-            @RequestParam long articleId,
-            RedirectAttributes redirectAttributes,
-            Model model
-    ){
-        try {
-            ArticleEntity article = articleService.getEntityById(articleId);
-            UserEntity user = userService.getLoggedUserEntity();
-            model.addAttribute("userId",user.getUserId());
-
-            /*
-            If user is not logged, he gets an error.
-            If user is logged, but already voted for the article, also gets an error
-            Else - the downvote will be done
-             */
-            if (user == null) {
-                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
-            } else if(articleService.hasUserRated(article,user)){
-                redirectAttributes.addFlashAttribute("error", "The user has already voted for the article.");
-            } else {
-                articleService.downVote(article,user);
-                redirectAttributes.addFlashAttribute("success", "The voting was successful.");
-                return "redirect:/articles/" + articleId;
-            }
-            return "redirect:/articles/" + articleId;
-        } catch (Exception e){
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error while voting up.");
-            return "redirect:/articles/" + articleId;
-        }
-    }
 
     @PostMapping("comment/{commentId}/voteUp")
     public String commentVoteUp(
@@ -323,29 +275,5 @@ public class ArticleController {
         }
     }
 
-    @PostMapping("comment/{commentId}/voteDown")
-    public String commentVoteDown(
-            @PathVariable long commentId,
-            RedirectAttributes redirectAttributes,
-            Model model
-    ) {
-        try {
-            CommentEntity comment = commentService.getCommentEntityById(commentId);
-            UserEntity user = userService.getLoggedUserEntity();
-            model.addAttribute("userId", user.getUserId());
-
-            if (user == null) {
-                redirectAttributes.addFlashAttribute("error", "The user is not authenticated.");
-            } else if(commentService.hasUserRated(comment, user)){
-            } else {
-                commentService.downVote(comment, user);
-            }
-            return "redirect:/articles/" + comment.getArticle().getArticleId() + "#comment-" + comment.getId();
-        } catch (Exception e){
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("error", "Error while voting.");
-            return "redirect:/articles/";
-        }
-    }
 
 }

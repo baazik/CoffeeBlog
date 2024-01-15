@@ -8,6 +8,9 @@ import cz.hocuspocus.coffeeblog.data.repositories.ArticleRepository;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ArticleMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -131,30 +134,18 @@ public class ArticleServiceImp implements ArticleService{
     }
 
     @Override
-    public void updateKarma(ArticleEntity article) {
-        List<ArticleRatingEntity> ratings = articleRatingRepository.findByArticle(article);
-        int totalRating = ratings.stream().mapToInt(ArticleRatingEntity::getRating).sum();
-        article.setKarma(totalRating);
-        articleRepository.save(article);
-    }
-
-    @Override
     public void updateVotes(ArticleEntity article){
         List<ArticleRatingEntity> ratings = articleRatingRepository.findByArticle(article);
 
         int upVotes = 0;
-        int downVotes = 0;
 
         for (ArticleRatingEntity rating : ratings) {
             if (rating.getRating() == 1) {
                 upVotes++;
-            } else if (rating.getRating() == -1) {
-                downVotes++;
             }
         }
 
         article.setUpVotes(upVotes);
-        article.setDownVotes(downVotes);
 
         articleRepository.save(article);
     }
@@ -171,25 +162,40 @@ public class ArticleServiceImp implements ArticleService{
         rating.setArticle(article);
         rating.setRating(1);
         saveRating(rating);
-        updateKarma(article);
         updateVotes(article);
     }
 
     @Override
-    public void downVote(ArticleEntity article, UserEntity user){
-        ArticleRatingEntity rating = new ArticleRatingEntity();
-        rating.setUser(user);
-        rating.setArticle(article);
-        rating.setRating(-1);
-        saveRating(rating);
-        updateKarma(article);
-        updateVotes(article);
+    public void visit(ArticleEntity article, HttpServletRequest request, HttpServletResponse response){
+        boolean hasVisited = hasUserVisited(article, request);
+
+        if (!hasVisited) {
+            article.setVisit(article.getVisit() + 1);
+            articleRepository.save(article);
+
+            markArticleAsVisited(article, response);
+        }
     }
 
-    @Override
-    public void visit(ArticleEntity article){
-        article.setVisit(article.getVisit() + 1);
-        articleRepository.save(article);
+    private boolean hasUserVisited(ArticleEntity article, HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("visited_articles") && cookie.getValue().contains(String.valueOf(article.getArticleId()))) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private void markArticleAsVisited(ArticleEntity article, HttpServletResponse response) {
+        Cookie cookie = new Cookie("visited_articles", article.getArticleId() + "");
+        cookie.setMaxAge(365 * 24 * 60 * 60); // Expires in one year
+        cookie.setPath("/"); // Set the cookie path as needed
+        response.addCookie(cookie);
     }
 
 

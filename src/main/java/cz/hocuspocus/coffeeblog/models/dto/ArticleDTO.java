@@ -26,11 +26,7 @@ public class ArticleDTO {
 
     private LocalDateTime date;
 
-    private int karma;
-
     private int upVotes;
-
-    private int downVotes;
 
     private int visit;
 
@@ -77,14 +73,6 @@ public class ArticleDTO {
     //endregion
 
 
-    public int getKarma() {
-        return karma;
-    }
-
-    public void setKarma(int karma) {
-        this.karma = karma;
-    }
-
     public int getUpVotes() {
         return upVotes;
     }
@@ -93,13 +81,6 @@ public class ArticleDTO {
         this.upVotes = upVotes;
     }
 
-    public int getDownVotes() {
-        return downVotes;
-    }
-
-    public void setDownVotes(int downVotes) {
-        this.downVotes = downVotes;
-    }
 
     public int getVisit() {
         return visit;

@@ -3,10 +3,10 @@
 <head th:fragment="head">
 
   <meta charset="utf-8"/>
-  <meta name="description" content="CoffeeBlog - Pheasant under pressure"/>
-  <meta name="keywords" content="portfolio, coffee, blog"/>
-  <meta name="author" content="Pheasant Under Pressure"/>
-  <title>CoffeeBlog - Pheasant under pressure</title>
+  <meta name="description" content="Bažant u plotny - blog domácího kuchaře"/>
+  <meta name="keywords" content="blog, foodblog, bažant u plotny, domácí kuchař, vaření"/>
+  <meta name="author" content="Michal Bažant"/>
+  <title>Bažant u plotny - foodblog domácího kuchaře</title>
 
 
   <link rel="stylesheet" th:href="@{/styles/lightbox.min.css}" type="text/css"/>
@@ -34,8 +34,8 @@
 
 <header th:fragment="header">
   <div id="logo">
-    <h1>CoffeeBlog<span>Pheasant under pressure</span></h1>
-    <small>coffeeblog for coffee lovers</small>
+    <h1>Foodblog<span>Bažant u plotny</span></h1>
+    <small>blog domácího kuchtila</small>
   </div>
   <nav>
     <ul>
@@ -53,11 +53,6 @@
           <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">My user profile</a>
           <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Users</a>
           <a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" class="dropdown-link">Logout</a>
-          <!--
-          <form sec:authorize="isAuthenticated()" method="post" th:action="@{/account/logout}">
-            <button class="btn text-white">Logout</button>
-          </form>
-          -->
         </div>
       </li>
     </ul>

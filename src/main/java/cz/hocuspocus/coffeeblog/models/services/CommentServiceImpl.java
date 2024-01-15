@@ -110,30 +110,18 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public void updateKarma(CommentEntity comment) {
-        List<CommentRatingEntity> ratings = commentRatingRepository.findByComment(comment);
-        int totalRating = ratings.stream().mapToInt(CommentRatingEntity::getRating).sum();
-        comment.setKarma(totalRating);
-        commentRepository.save(comment);
-    }
-
-    @Override
     public void updateVotes(CommentEntity comment){
         List<CommentRatingEntity> ratings = commentRatingRepository.findByComment(comment);
 
         int upVotes = 0;
-        int downVotes = 0;
 
         for (CommentRatingEntity rating : ratings) {
             if (rating.getRating() == 1) {
                 upVotes++;
-            } else if (rating.getRating() == -1) {
-                downVotes++;
             }
         }
 
         comment.setUpVotes(upVotes);
-        comment.setDownVotes(downVotes);
 
         commentRepository.save(comment);
     }
@@ -150,18 +138,6 @@ public class CommentServiceImpl implements CommentService{
         rating.setComment(comment);
         rating.setRating(1);
         saveRating(rating);
-        updateKarma(comment);
-        updateVotes(comment);
-    }
-
-    @Override
-    public void downVote(CommentEntity comment, UserEntity user){
-        CommentRatingEntity rating = new CommentRatingEntity();
-        rating.setUser(user);
-        rating.setComment(comment);
-        rating.setRating(-1);
-        saveRating(rating);
-        updateKarma(comment);
         updateVotes(comment);
     }
 

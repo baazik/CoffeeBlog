@@ -30,13 +30,7 @@ public class CommentEntity {
     private UserEntity user;
 
     @Column(nullable = false)
-    private int karma;
-
-    @Column(nullable = false)
     private int upVotes;
-
-    @Column(nullable = false)
-    private int downVotes;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<CommentRatingEntity> userRatings = new ArrayList<>();
@@ -81,28 +75,12 @@ public class CommentEntity {
         this.user = user;
     }
 
-    public int getKarma() {
-        return karma;
-    }
-
-    public void setKarma(int karma) {
-        this.karma = karma;
-    }
-
     public int getUpVotes() {
         return upVotes;
     }
 
     public void setUpVotes(int upVotes) {
         this.upVotes = upVotes;
-    }
-
-    public int getDownVotes() {
-        return downVotes;
-    }
-
-    public void setDownVotes(int downVotes) {
-        this.downVotes = downVotes;
     }
 
     public List<CommentRatingEntity> getUserRatings() {

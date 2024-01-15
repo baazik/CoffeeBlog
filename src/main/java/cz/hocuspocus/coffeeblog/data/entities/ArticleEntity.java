@@ -31,13 +31,7 @@ public class ArticleEntity {
     private List<CommentEntity> comments = new ArrayList<>();
 
     @Column(nullable = false)
-    private int karma;
-
-    @Column(nullable = false)
     private int upVotes;
-
-    @Column(nullable = false)
-    private int downVotes;
 
     @Column(nullable = false)
     private int visit;
@@ -101,28 +95,12 @@ public class ArticleEntity {
         this.userRatings = userRatings;
     }
 
-    public int getKarma() {
-        return karma;
-    }
-
-    public void setKarma(int karma) {
-        this.karma = karma;
-    }
-
     public int getUpVotes() {
         return upVotes;
     }
 
     public void setUpVotes(int upVotes) {
         this.upVotes = upVotes;
-    }
-
-    public int getDownVotes() {
-        return downVotes;
-    }
-
-    public void setDownVotes(int downVotes) {
-        this.downVotes = downVotes;
     }
 
     public int getVisit() {
