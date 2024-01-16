@@ -18,15 +18,15 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
   <script>
-        tinymce.init({
-            selector: "textarea[id*=content]",
-            entities: "160,nbsp",
-            entity_encoding: "named",
-            entity_encoding: "raw",
-            plugins: "image",
-            menubar: "insert"
-        });
-    </script>
+    tinymce.init({
+        selector: "textarea[id*=content],textarea[id*=image]",
+        entities: "160,nbsp",
+        entity_encoding: "named",
+        plugins: "image",
+        menubar: "insert"
+    });
+</script>
+
 
 </head>
 
@@ -39,20 +39,20 @@
   </div>
   <nav>
     <ul>
-      <li><a th:href="@{/}">Home</a></li>
-      <li><a th:href="@{/articles}">Articles</a></li>
-      <li><a th:href="@{/skills}">Coffee Skills</a></li>
-      <li><a th:href="@{/references}">References</a></li>
-      <li><a class="kontakt-tlacitko" th:href="@{/contact}">Contact</a></li>
+      <li><a th:href="@{/}">Domů</a></li>
+      <li><a th:href="@{/articles}">Články</a></li>
+      <li><a th:href="@{/recipes}">Recepty</a></li>
+      <li><a th:href="@{/references}">Reference</a></li>
+      <li><a class="kontakt-tlacitko" th:href="@{/contact}">Kontakt</a></li>
       <li class="dropdown">
-        <a href="#" class="dropbtn">Account</a>
+        <a href="#" class="dropbtn">Účet</a>
         <div class="dropdown-content">
-          <a sec:authorize="isAnonymous()" th:href="@{/account/login}" class="dropdown-link">Login</a>
-          <a sec:authorize="isAnonymous()" th:href="@{/account/register}" class="dropdown-link">Sign up</a>
-          <a sec:authorize="isAuthenticated()" th:href="@{/account/changepassword}" class="dropdown-link">Change password</a>
-          <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">My user profile</a>
-          <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Users</a>
-          <a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" class="dropdown-link">Logout</a>
+          <a sec:authorize="isAnonymous()" th:href="@{/account/login}" class="dropdown-link">Přihlásit se</a>
+          <a sec:authorize="isAnonymous()" th:href="@{/account/register}" class="dropdown-link">Registrace</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/changepassword}" class="dropdown-link">Změna hesla</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">Můj profil</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Uživatelé</a>
+          <a sec:authorize="isAuthenticated()" th:href="@{/account/logout}" class="dropdown-link">Odhlásit se</a>
         </div>
       </li>
     </ul>
