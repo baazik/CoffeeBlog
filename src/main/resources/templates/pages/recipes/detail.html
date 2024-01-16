@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<article>
+    <div id="centrovac">
+        <section>
+            <h2 th:text="${recipe.title}"></h2>
+            <p th:utext="${recipe.content}"></p>
+
+            <div class="py-2 flash-message message-success" th:text="${success}" th:if="${success}"></div>
+            <div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
+            <a class="clanky-tlacitko" th:href="@{/recipes}">Zpět na seznam receptů</a>
+        </section>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+
+</html>

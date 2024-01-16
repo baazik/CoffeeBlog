@@ -1,5 +1,6 @@
 <div th:fragment="comments">
     <h2>Comments</h2>
+    <p sec:authorize="isAnonymous()">Pro přidávání komentářů se musíte přihlásit.</p>
     <li sec:authorize="isAuthenticated()" class="list-group-item">
         <form class="d-flex flex-column gap-2"
               method="post"
@@ -23,9 +24,7 @@
         <p th:text="${comment.comment}"></p>
         <p th:text="${#temporals.format(comment.date, 'dd.MM. yyyy HH:mm')}"></p>
         <p th:text="${comment.user.nickName}"></p>
-        <p>Upvotes: <span th:text="${comment.upVotes}"></span>
-            Downvotes: <span th:text="${comment.downVotes}"></span>
-            Karma: <span th:text="${comment.karma}"></span></p>
+        <p>Upvotes: <span th:text="${comment.upVotes}"></span></p>
 
         <div sec:authorize="isAuthenticated()">
             <!-- Tlačítko pro hlasování nahoru -->

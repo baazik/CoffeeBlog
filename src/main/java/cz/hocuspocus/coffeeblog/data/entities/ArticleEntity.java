@@ -22,7 +22,7 @@ public class ArticleEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime date;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

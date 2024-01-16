@@ -165,6 +165,9 @@ public class ArticleServiceImp implements ArticleService{
         updateVotes(article);
     }
 
+    /*
+    Method for tracking visits in article - because of cookies, user (logged or unlogged) will increase the counter in the same article just once
+     */
     @Override
     public void visit(ArticleEntity article, HttpServletRequest request, HttpServletResponse response){
         boolean hasVisited = hasUserVisited(article, request);
