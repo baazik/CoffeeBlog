@@ -8,17 +8,17 @@ public class RecipeDTO {
 
     private long recipeId;
 
-    @NotBlank(message = "Insert the title")
-    @NotNull(message = "Insert the title")
-    @Size(max = 100, message = "The title is too long")
+    @NotBlank(message = "Vložte název")
+    @NotNull(message = "Vložte název")
+    @Size(max = 100, message = "Název je přílši dlouhý")
     private String title;
 
-    @NotBlank(message = "Insert the description")
-    @NotNull(message = "Insert the description")
+    @NotBlank(message = "Vložte popis")
+    @NotNull(message = "Vložte popis")
     private String description;
 
-    @NotBlank(message = "Insert the content")
-    @NotNull(message = "Insert the content")
+    @NotBlank(message = "Vložte obsah")
+    @NotNull(message = "Vložte obsah")
     private String content;
 
     private int upVotes;

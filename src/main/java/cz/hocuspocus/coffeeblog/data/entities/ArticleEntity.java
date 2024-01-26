@@ -16,7 +16,7 @@ public class ArticleEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1500)
     private String description;
 
     @Column(nullable = false, columnDefinition = "TEXT")

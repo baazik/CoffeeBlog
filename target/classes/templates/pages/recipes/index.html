@@ -15,21 +15,18 @@
         </header>
 
         <section>
-            <p>
+            <p sec:authorize="hasRole('ADMIN')">
                 <a class="clanky-tlacitko" th:href="@{/recipes/create}">Vytvořit nový recept</a>
             </p>
 
-            <ul class="list-group" id="clanky">
-                <li th:each="recipe: ${recipes}" class="list-group-item">
-                    <h2><a th:href="@{'/recipes/' + ${recipe.recipeId}}" th:text="${recipe.title}"></a></h2>
-                    <p th:text="${recipe.description}"></p>
-                    <p th:utext="${recipe.image}"></p>
-                    <p sec:authorize="hasRole('ADMIN')">
-                        <a th:href="@{'/recipes/edit/' + ${recipe.recipeId}}">Upravit</a>
-                        <a th:href="@{'/recipes/delete/' + ${recipe.recipeId}}">Smazat</a>
-                    </p>
-                </li>
-            </ul>
+            <div th:each="entry : ${recipesByAlphabet}">
+                <h2 th:text="${entry.key}"></h2>
+                <ul>
+                    <li th:each="recipe : ${entry.value}">
+                        <a th:href="@{'/recipes/' + ${recipe.recipeId}}" th:text="${recipe.title}"></a>
+                    </li>
+                </ul>
+            </div>
         </section>
     </div>
 </article>

@@ -17,15 +17,21 @@
   <script th:src="@{/scripts/lightbox-plus-jquery.min.js}"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/tinymce.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.3/plugins/image/plugin.js"></script> <!-- Přidáváme plugin pro obrázky -->
   <script>
     tinymce.init({
         selector: "textarea[id*=content],textarea[id*=image]",
         entities: "160,nbsp",
         entity_encoding: "named",
         plugins: "image",
-        menubar: "insert"
+        menubar: "insert",
+        toolbar: "imageupload",
+        images_upload_url: "/recipes/uploadImage",
+        images_upload_base_path: "/"
     });
 </script>
+
+
 
 
 </head>

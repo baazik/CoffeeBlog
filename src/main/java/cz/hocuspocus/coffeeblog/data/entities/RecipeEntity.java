@@ -21,10 +21,8 @@ public class RecipeEntity {
     @Column(nullable = false)
     private int upVotes;
 
-    @Column(nullable = false)
     private String tags;
 
-    @Column(nullable = false)
     private String image;
 
     public long getRecipeId() {

@@ -1,6 +1,7 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.data.entities.ArticleEntity;
+import cz.hocuspocus.coffeeblog.data.entities.RecipeEntity;
 import cz.hocuspocus.coffeeblog.models.dto.ArticleDTO;
 import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.RecipeDTO;
@@ -10,14 +11,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/recipes")
@@ -29,11 +39,20 @@ public class RecipeController {
     @Autowired
     private RecipeMapper recipeMapper;
 
+    /*
     @GetMapping
     public String renderIndex(Model model) {
         List<RecipeDTO> recipes = recipeService.getAll();
         model.addAttribute("recipes", recipes);
 
+        return "pages/recipes/index";
+    }
+     */
+
+    @GetMapping
+    public String getAllRecipes(Model model) {
+        Map<Character, List<RecipeEntity>> recipesByAlphabet = recipeService.getAllRecipesByAlphabetSorted();
+        model.addAttribute("recipesByAlphabet", recipesByAlphabet);
         return "pages/recipes/index";
     }
 
@@ -115,6 +134,33 @@ public class RecipeController {
         redirectAttributes.addFlashAttribute("success","Článek byl smazán.");
 
         return "redirect:/recipes";
+    }
+
+    @PostMapping("/uploadImage")
+    public ResponseEntity<String> handleImageUpload(@RequestParam("file") MultipartFile file) {
+        try {
+            // Zpracování nahrávání obrázku a uložení do fyzické složky
+            String relativePath = "uploads/" + file.getOriginalFilename();
+            Path path = Paths.get("src/main/resources/static", relativePath);
+
+            // Vytvoření složky, pokud neexistuje
+            Files.createDirectories(path.getParent());
+
+            // Zápis souboru
+            Files.write(path, file.getBytes());
+
+            // Vráťte JSON s URL k nově nahrávanému obrázku
+            String imageUrl = relativePath;
+            String jsonResponse = "{ \"location\": \"" + imageUrl + "\" }";
+            System.out.println("Obrázek nahrán.");
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .body(jsonResponse);
+        } catch (Exception e) {
+            // Zalogování detailů výjimky
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Chyba při zpracování obrázku");
+        }
     }
 
 

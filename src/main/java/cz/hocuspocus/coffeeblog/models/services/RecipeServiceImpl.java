@@ -9,7 +9,7 @@ import cz.hocuspocus.coffeeblog.models.exceptions.RecipeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -58,6 +58,38 @@ public class RecipeServiceImpl implements RecipeService{
     public void remove(long recipeId){
         RecipeEntity fetchedRecipe = getRecipeOrThrow(recipeId);
         recipeRepository.delete(fetchedRecipe);
+    }
+
+    @Override
+    public Map<Character, List<RecipeEntity>> getAllRecipesByAlphabetSorted() {
+        Map<Character, List<RecipeEntity>> recipesByAlphabet = getAllRecipesByAlphabet();
+
+        // Seřadit seznamy receptů v každé skupině
+        recipesByAlphabet.forEach((key, value) -> {
+            value.sort(Comparator.comparing(RecipeEntity::getTitle, String.CASE_INSENSITIVE_ORDER));
+        });
+
+        // Seřadit mapu podle klíčů (abecedně)
+        Map<Character, List<RecipeEntity>> sortedRecipesByAlphabet = new TreeMap<>(recipesByAlphabet);
+
+        return sortedRecipesByAlphabet;
+    }
+
+    @Override
+    public Map<Character, List<RecipeEntity>> getAllRecipesByAlphabet() {
+        Map<Character, List<RecipeEntity>> recipesByAlphabet = new HashMap<>();
+
+        for (char letter = 'A'; letter <= 'Z'; letter++) {
+            String letterAsString = String.valueOf(letter);
+            List<RecipeEntity> recipesForLetter = recipeRepository.findByTitleStartingWithOrderByTitleAsc(letterAsString);
+            if (!recipesForLetter.isEmpty()) {
+                recipesForLetter.sort(Comparator.comparing(recipe -> recipe.getTitle(), String.CASE_INSENSITIVE_ORDER));
+                recipesByAlphabet.put(letter, recipesForLetter);
+            }
+        }
+
+        return recipesByAlphabet;
+
     }
 
 }

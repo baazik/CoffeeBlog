@@ -9,6 +9,10 @@
 <article>
   <div id="centrovac">
     <section>
+      <p sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{'/articles/edit/' + ${article.articleId}}">Edit</a>
+        <a th:href="@{'/articles/delete/' + ${article.articleId}}">Delete</a>
+      </p>
       <h2 th:text="${article.title}"></h2>
       <p th:text="${#temporals.format(article.date, 'dd.MM. yyyy HH:mm')}"></p>
       <p th:utext="${article.content}"></p>

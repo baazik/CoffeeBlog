@@ -9,6 +9,10 @@
 <article>
     <div id="centrovac">
         <section>
+            <p sec:authorize="hasRole('ADMIN')">
+                <a th:href="@{'/recipes/edit/' + ${recipe.recipeId}}">Edit</a>
+                <a th:href="@{'/recipes/delete/' + ${recipe.recipeId}}">Delete</a>
+            </p>
             <h2 th:text="${recipe.title}"></h2>
             <p th:utext="${recipe.image}"></p>
             <p th:utext="${recipe.content}"></p>
