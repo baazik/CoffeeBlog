@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,16 +40,6 @@ public class RecipeController {
 
     @Autowired
     private RecipeMapper recipeMapper;
-
-    /*
-    @GetMapping
-    public String renderIndex(Model model) {
-        List<RecipeDTO> recipes = recipeService.getAll();
-        model.addAttribute("recipes", recipes);
-
-        return "pages/recipes/index";
-    }
-     */
 
     @GetMapping
     public String getAllRecipes(Model model) {
@@ -136,33 +128,6 @@ public class RecipeController {
         return "redirect:/recipes";
     }
 
-    @PostMapping("/uploadImage")
-    public ResponseEntity<String> handleImageUpload(@RequestParam("file") MultipartFile file) {
-        try {
-            // Zpracování nahrávání obrázku a uložení do fyzické složky
-            String relativePath = "uploads/" + file.getOriginalFilename();
-            Path path = Paths.get("src/main/resources/static", relativePath);
-
-            // Vytvoření složky, pokud neexistuje
-            Files.createDirectories(path.getParent());
-
-            // Zápis souboru
-            Files.write(path, file.getBytes());
-
-            // Vráťte JSON s URL k nově nahrávanému obrázku
-            String imageUrl = relativePath;
-            String jsonResponse = "{ \"location\": \"" + imageUrl + "\" }";
-            System.out.println("Obrázek nahrán.");
-            return ResponseEntity.status(HttpStatus.OK)
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                    .body(jsonResponse);
-        } catch (Exception e) {
-            // Zalogování detailů výjimky
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Chyba při zpracování obrázku");
-        }
-    }
-
-
-
 }
+
+
