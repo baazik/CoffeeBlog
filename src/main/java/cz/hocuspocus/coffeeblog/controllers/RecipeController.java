@@ -89,6 +89,7 @@ public class RecipeController {
             @PathVariable Long recipeId,
             RecipeDTO recipe
     ) {
+
         RecipeDTO fetchedRecipe = recipeService.getById(recipeId);
         recipeMapper.updateRecipeDTO(fetchedRecipe, recipe);
 

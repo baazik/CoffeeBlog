@@ -62,11 +62,13 @@ public class ImagesController {
         }
     }
 
-    @GetMapping("uploads/{imageName:.+}")
+    @GetMapping({"/uploads/{imageName:.+}", "/recipes/uploads/{imageName:.+}", "/articles/uploads/{imageName:.+}"})
     @ResponseBody
     @CacheEvict(allEntries = true, value = {"yourCacheName"})
     public ResponseEntity<Resource> serveFile(@PathVariable String imageName) {
         try {
+
+            evictAllCaches();
             Path imagePath = Paths.get("src/main/resources/static/uploads", imageName);
             Resource resource = new UrlResource(imagePath.toUri());
 
