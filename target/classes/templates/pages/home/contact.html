@@ -13,9 +13,21 @@
       </p>
 
       <p class="centrovany">
-        <iframe frameborder="0" scrolling="no" width="500" height="220"
-                src="https://www.itnetwork.cz/service/mail_form.php?hash=5b5a8cdab989b5e4833544f23501910b">
-        </iframe>
+      <form action="#" method="post" th:action="@{/contact}" th:object="${contactForm}">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" th:field="*{name}"/><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" th:field="*{email}"/><br>
+
+        <label for="subject">Subject:</label><br>
+        <input type="text" id="subject" name="subject" th:field="*{subject}"/><br>
+
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" th:field="*{message}"></textarea><br>
+
+        <input type="submit" value="Submit"/>
+      </form>
       </p>
     </section>
   </div>

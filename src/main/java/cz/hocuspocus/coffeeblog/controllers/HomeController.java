@@ -10,11 +10,6 @@ public class HomeController {
         return "pages/home/index";
     }
 
-    @GetMapping("/contact")
-    public String renderContact() {
-        return "pages/home/contact";
-    }
-
     @GetMapping("/references")
     public String renderReferences() {
         return "pages/home/references";
