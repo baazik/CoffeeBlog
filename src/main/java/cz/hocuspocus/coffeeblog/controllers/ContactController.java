@@ -2,6 +2,7 @@ package cz.hocuspocus.coffeeblog.controllers;
 
 import cz.hocuspocus.coffeeblog.models.dto.ContactFormDTO;
 import cz.hocuspocus.coffeeblog.models.services.EmailService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -28,10 +29,9 @@ public class ContactController {
     }
 
     @PostMapping("/contact")
-    public String submitContactForm(@ModelAttribute("contactForm") ContactFormDTO contactForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String submitContactForm(@ModelAttribute("contactForm") @Valid ContactFormDTO contactForm, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("error", "Při odesílání emailového formuláře došlo k chybě.");
-            return "redirect:/contact";
+            return "pages/home/contact";
         }
 
         // Získání dat z formuláře
@@ -39,11 +39,15 @@ public class ContactController {
         String subject = contactForm.getSubject();
         String text = "From: " + contactForm.getName() + " <" + contactForm.getEmail() + ">\n\n" + contactForm.getMessage();
 
+        if (subject.isEmpty()){
+
+        }
+
         // Odeslání e-mailu
         emailService.sendEmail(to, subject, text);
 
-        redirectAttributes.addFlashAttribute("success", "Email byl úspěšně odeslán.");
-        return "redirect:/contact";
+        model.addAttribute("success", "Email byl úspěšně odeslán.");
+        return "pages/home/contact";
     }
 
 }
