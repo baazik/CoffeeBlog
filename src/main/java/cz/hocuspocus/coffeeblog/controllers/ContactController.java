@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class ContactController {
@@ -27,9 +28,10 @@ public class ContactController {
     }
 
     @PostMapping("/contact")
-    public String submitContactForm(@ModelAttribute("contactForm") ContactFormDTO contactForm, BindingResult bindingResult, Model model) {
+    public String submitContactForm(@ModelAttribute("contactForm") ContactFormDTO contactForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "pages/home/contact";
+            redirectAttributes.addFlashAttribute("error", "Při odesílání emailového formuláře došlo k chybě.");
+            return "redirect:/contact";
         }
 
         // Získání dat z formuláře
@@ -40,7 +42,8 @@ public class ContactController {
         // Odeslání e-mailu
         emailService.sendEmail(to, subject, text);
 
-        return "pages/home/contact";
+        redirectAttributes.addFlashAttribute("success", "Email byl úspěšně odeslán.");
+        return "redirect:/contact";
     }
 
 }
