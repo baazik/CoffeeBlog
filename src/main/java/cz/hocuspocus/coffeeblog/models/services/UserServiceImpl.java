@@ -1,16 +1,16 @@
 package cz.hocuspocus.coffeeblog.models.services;
 
+import cz.hocuspocus.coffeeblog.data.entities.PasswordResetTokenEntity;
 import cz.hocuspocus.coffeeblog.data.entities.ProfileEntity;
 import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
+import cz.hocuspocus.coffeeblog.data.repositories.PasswordResetTokenRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.ProfileRepository;
 import cz.hocuspocus.coffeeblog.data.repositories.UserRepository;
 import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.UserMapper;
-import cz.hocuspocus.coffeeblog.models.exceptions.DuplicateEmailException;
-import cz.hocuspocus.coffeeblog.models.exceptions.InvalidPasswordException;
-import cz.hocuspocus.coffeeblog.models.exceptions.PasswordsDoNotEqualException;
-import cz.hocuspocus.coffeeblog.models.exceptions.UserNotFoundException;
+import cz.hocuspocus.coffeeblog.models.exceptions.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -126,5 +131,62 @@ public class UserServiceImpl implements UserService{
         return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username, " + username + " not found"));
     }
+
+    @Override
+    public UserEntity findUserByEmail(String email){
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Username, " + email + " not found"));
+    }
+
+    @Override
+    public void createPasswordResetTokenForUser(UserEntity user, String token) {
+        PasswordResetTokenEntity myToken = new PasswordResetTokenEntity();
+        myToken.setUser(user);
+        myToken.setToken(token);
+        myToken.setExpiryDate(LocalDateTime.now().plusHours(24));
+        passwordResetTokenRepository.save(myToken);
+    }
+
+    @Override
+    public boolean validatePasswordResetToken(String token) {
+        PasswordResetTokenEntity passwordResetToken = passwordResetTokenRepository.findByToken(token)
+                .map(result -> (PasswordResetTokenEntity) result)
+                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
+        return !passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now());
+    }
+
+    @Override
+    public void resetPassowrd(String token, String password){
+        UserEntity user = userRepository.findByPasswordResetToken_Token(token)
+                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
+
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
+
+    @Override
+    public boolean isTokenExpired(PasswordResetTokenEntity token) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expiryDate = token.getExpiryDate();
+        return now.isAfter(expiryDate);
+    }
+
+    private PasswordResetTokenEntity getTokenOrThrow(long id) {
+        return passwordResetTokenRepository
+                .findById(id)
+                .orElseThrow(ArticleNotFoundException::new);
+    }
+
+    @Override
+    public void deleteCurrentToken(long tokenId) {
+        // Smazání tokenu podle jeho hodnoty
+        PasswordResetTokenEntity fetchedToken = getTokenOrThrow(tokenId);
+        UserEntity user = fetchedToken.getUser();
+        user.setPasswordResetToken(null);
+        passwordResetTokenRepository.delete(fetchedToken);
+        System.out.println("Test: " + fetchedToken.getToken());
+    }
+
+
 
 }

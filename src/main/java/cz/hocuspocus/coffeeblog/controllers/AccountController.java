@@ -1,28 +1,26 @@
 package cz.hocuspocus.coffeeblog.controllers;
 
+import cz.hocuspocus.coffeeblog.data.entities.PasswordResetTokenEntity;
+import cz.hocuspocus.coffeeblog.data.entities.UserEntity;
+import cz.hocuspocus.coffeeblog.data.repositories.PasswordResetTokenRepository;
+import cz.hocuspocus.coffeeblog.models.dto.ForgotPasswordDTO;
 import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
-import cz.hocuspocus.coffeeblog.models.exceptions.DuplicateEmailException;
-import cz.hocuspocus.coffeeblog.models.exceptions.InvalidPasswordException;
-import cz.hocuspocus.coffeeblog.models.exceptions.PasswordsDoNotEqualException;
+import cz.hocuspocus.coffeeblog.models.exceptions.*;
+import cz.hocuspocus.coffeeblog.models.services.EmailService;
 import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/account")
@@ -30,6 +28,12 @@ public class AccountController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("login")
     public String renderLogin(HttpServletRequest request){
@@ -104,6 +108,65 @@ public class AccountController {
 
         redirectAttributes.addFlashAttribute("success", "The password was successfully changed.");
         return "redirect:/account/login?logout";
+    }
+
+    @GetMapping("forgotpassword")
+    public String showForgotPasswordForm(@ModelAttribute ForgotPasswordDTO forgotPasswordDTO) {
+        return "pages/account/forgotpassword";
+    }
+
+    @PostMapping("forgotpassword")
+    public String processForgotPasswordForm(@RequestParam("email") String userEmail, ForgotPasswordDTO forgotPasswordDTO, BindingResult result, Model model) {
+        UserEntity user = userService.findUserByEmail(userEmail);
+
+        if (result.hasErrors()) {
+            return showForgotPasswordForm(forgotPasswordDTO);
+        }
+
+        // Kontrola, zda pro daného uživatele již existuje platný token
+        Optional<PasswordResetTokenEntity> existingToken = passwordResetTokenRepository.findByUser(user);
+        if (existingToken.isPresent()) {
+            System.out.println("Token existuje");
+            System.out.println("Zobrazuji token" + existingToken.get().getToken());
+            // Existuje platný token, můžete buď ten existující token použít nebo jej smazat a vytvořit nový
+            userService.deleteCurrentToken(existingToken.get().getId());
+            System.out.println("Token byl smazán");
+            String token = UUID.randomUUID().toString();
+            userService.createPasswordResetTokenForUser(user, token);
+            emailService.sendPasswordResetEmail(userEmail, token);
+            System.out.println("Token byl smazán, vytvořil se nový a email se odeslal.");
+        } else {
+            // Vytvoření nového tokenu
+            String token = UUID.randomUUID().toString();
+            userService.createPasswordResetTokenForUser(user, token);
+            emailService.sendPasswordResetEmail(userEmail, token);
+            System.out.println("Byl vytvořen nový token a email se odeslal.");
+        }
+
+       model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
+
+        return "pages/account/forgotpassword";
+    }
+
+    @GetMapping("resetpassword")
+    public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
+        if (userService.validatePasswordResetToken(token)) {
+            model.addAttribute("token", token);
+            return "/pages/account/updatepassword";
+        } else {
+            return "redirect:/account/login?invalidToken";
+        }
+    }
+
+    @PostMapping("resetpassword")
+    public String processResetPasswordForm(@RequestParam("token") String token,
+                                           @RequestParam("password") String password) {
+        if (userService.validatePasswordResetToken(token)) {
+            userService.resetPassowrd(token,password);
+            return "redirect:/account/login?resetPasswordSuccess";
+        } else {
+            return "redirect:/account/login?invalidToken";
+        }
     }
 
 }

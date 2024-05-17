@@ -34,6 +34,9 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CommentEntity> comments;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private PasswordResetTokenEntity passwordResetToken;
+
     public long getUserId() {
         return userId;
     }
@@ -121,4 +124,11 @@ public class UserEntity implements UserDetails {
         return true;
     }
 
+    public PasswordResetTokenEntity getPasswordResetToken() {
+        return passwordResetToken;
+    }
+
+    public void setPasswordResetToken(PasswordResetTokenEntity passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
+    }
 }
