@@ -25,9 +25,9 @@ public interface UserService extends UserDetailsService {
 
     boolean validatePasswordResetToken(String token);
 
-    void resetPassowrd(String token, String password);
+    void resetPassword(String token, String newPassword);
 
-    boolean isTokenExpired(PasswordResetTokenEntity token);
+    boolean isValidPasswordResetToken(String token);
 
     void deleteCurrentToken(long tokenId);
 

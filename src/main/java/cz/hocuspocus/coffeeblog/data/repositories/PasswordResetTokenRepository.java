@@ -7,6 +7,6 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface PasswordResetTokenRepository extends CrudRepository<PasswordResetTokenEntity, Long> {
-    Optional<Object> findByToken(String token);
+    Optional<PasswordResetTokenEntity> findByToken(String token);
     Optional<PasswordResetTokenEntity> findByUser(UserEntity user);
 }

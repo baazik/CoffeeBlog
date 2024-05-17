@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -156,19 +157,25 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void resetPassowrd(String token, String password){
-        UserEntity user = userRepository.findByPasswordResetToken_Token(token)
-                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
+    public boolean isValidPasswordResetToken(String token) {
+        Optional<PasswordResetTokenEntity> tokenEntity = passwordResetTokenRepository.findByToken(token);
 
-        user.setPassword(passwordEncoder.encode(password));
-        userRepository.save(user);
-    }
+        if (tokenEntity == null) {
+            // Token neexistuje v databázi
+            return false;
+        }
 
-    @Override
-    public boolean isTokenExpired(PasswordResetTokenEntity token) {
+        LocalDateTime expiryDate = tokenEntity.get().getExpiryDate();
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expiryDate = token.getExpiryDate();
-        return now.isAfter(expiryDate);
+
+        if (expiryDate.isBefore(now)) {
+            // Token je expirovaný
+            return false;
+        }
+
+        // Token je platný
+        return true;
+
     }
 
     private PasswordResetTokenEntity getTokenOrThrow(long id) {
@@ -185,6 +192,26 @@ public class UserServiceImpl implements UserService{
         user.setPasswordResetToken(null);
         passwordResetTokenRepository.delete(fetchedToken);
         System.out.println("Test: " + fetchedToken.getToken());
+    }
+
+    @Override
+    public void resetPassword(String token, String newPassword){
+        // Validace tokenu, např. ověření jeho platnosti a existence v databázi
+        if (!isValidPasswordResetToken(token)) {
+            throw new InvalidTokenException("Invalid or expired token.");
+        }
+
+        // Získání uživatele pomocí tokenu
+        PasswordResetTokenEntity resetToken = passwordResetTokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidTokenException("Token not found."));
+        UserEntity user = resetToken.getUser();
+
+        // Nastavení nového hesla a uložení do databáze
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Smazání tokenu po úspěšném resetování hesla
+        passwordResetTokenRepository.delete(resetToken);
     }
 
 

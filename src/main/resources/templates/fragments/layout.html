@@ -55,6 +55,7 @@
         <div class="dropdown-content">
           <a sec:authorize="isAnonymous()" th:href="@{/account/login}" class="dropdown-link">Přihlásit se</a>
           <a sec:authorize="isAnonymous()" th:href="@{/account/register}" class="dropdown-link">Registrace</a>
+          <a sec:authorize="isAnonymous()" th:href="@{/account/forgotpassword}" class="dropdown-link">Zapomenuté heslo</a>
           <a sec:authorize="isAuthenticated()" th:href="@{/account/changepassword}" class="dropdown-link">Změna hesla</a>
           <a sec:authorize="isAuthenticated()" th:href="@{/profile/userprofile}" class="dropdown-link">Můj profil</a>
           <a sec:authorize="isAuthenticated()" th:href="@{/profile/list}" class="dropdown-link">Uživatelé</a>
@@ -67,7 +68,7 @@
 
 
 <footer th:fragment="footer">
-  Created by &copy;Michal Bažant 2023
+  Created by &copy;Michal Bažant 2024
 </footer>
 
 </body>

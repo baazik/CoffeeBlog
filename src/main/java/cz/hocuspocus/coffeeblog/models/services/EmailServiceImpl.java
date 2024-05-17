@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService{
 
     public void sendPasswordResetEmail(String userEmail, String token){
         String subject = "Bažant na pekáči - obnova hesla";
-        String resetUrl = "http://localhost:8080/reset-password?token=" + token;
+        String resetUrl = "http://localhost:8080/account/reset-password?token=" + token;
         String message = "K obnovení hesla k Vašemu účtu klikněte na následující odkaz: \n" + resetUrl;
 
         sendEmail(userEmail, subject, message);

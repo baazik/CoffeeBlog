@@ -143,29 +143,41 @@ public class AccountController {
             System.out.println("Byl vytvořen nový token a email se odeslal.");
         }
 
-       model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
+        model.addAttribute("success","Email na obnovu hesla byl úspěšně odeslán.");
 
         return "pages/account/forgotpassword";
     }
 
-    @GetMapping("resetpassword")
+    @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        if (userService.validatePasswordResetToken(token)) {
-            model.addAttribute("token", token);
-            return "/pages/account/updatepassword";
-        } else {
-            return "redirect:/account/login?invalidToken";
+        // Validace tokenu, např. ověření jeho platnosti a existence v databázi
+        if (!userService.isValidPasswordResetToken(token)) {
+            // Pokud je token neplatný, přesměrujte na stránku s chybovou zprávou nebo formulářem pro žádost o nový token
+            return "redirect:/error"; // Upravte podle potřeby
         }
+
+        model.addAttribute("token", token);
+        return "/pages/account/resetpassword";
     }
 
-    @PostMapping("resetpassword")
-    public String processResetPasswordForm(@RequestParam("token") String token,
-                                           @RequestParam("password") String password) {
-        if (userService.validatePasswordResetToken(token)) {
-            userService.resetPassowrd(token,password);
-            return "redirect:/account/login?resetPasswordSuccess";
-        } else {
-            return "redirect:/account/login?invalidToken";
+    @PostMapping("/reset-password")
+    public String resetPassword(@RequestParam("token") String token, @RequestParam("password") String password, @RequestParam("confirmPassword") String confirmPassword, RedirectAttributes redirectAttributes) {
+        if (!password.equals(confirmPassword)) {
+            // Hesla se neshodují, zobrazte chybovou zprávu a přesměrujte zpět na formulář
+            redirectAttributes.addFlashAttribute("error", "Passwords do not match.");
+            return "redirect:/reset-password?token=" + token;
+        }
+
+        try {
+            // Volání servisní metody pro resetování hesla
+            userService.resetPassword(token, password);
+            // Úspěšné resetování hesla, přesměrujte uživatele na stránku s potvrzením
+            redirectAttributes.addFlashAttribute("success", "Your password has been successfully reset.");
+            return "redirect:/account/login"; // Upravte podle potřeby
+        } catch (InvalidTokenException e) {
+            // Chyba při ověřování tokenu, zobrazte chybovou zprávu a přesměrujte zpět na formulář
+            redirectAttributes.addFlashAttribute("error", "Invalid or expired token.");
+            return "redirect:/reset-password?token=" + token;
         }
     }
 
