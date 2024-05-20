@@ -10,7 +10,6 @@ import cz.hocuspocus.coffeeblog.models.exceptions.*;
 import cz.hocuspocus.coffeeblog.models.services.EmailService;
 import cz.hocuspocus.coffeeblog.models.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,11 +36,11 @@ public class AccountController {
 
     @GetMapping("login")
     public String renderLogin(HttpServletRequest request){
-        // Získání původní URL
+        // Geeting referer URL
         String referer = request.getHeader("Referer");
-        // Uložení do session
+        // Saving to session
         request.getSession().setAttribute("prevPage", referer);
-        // Zobrazení přihlašovacího formuláře
+        // Showing login form
         return  "/pages/account/login";
     }
 
@@ -131,31 +130,25 @@ public class AccountController {
             System.out.println("User found: " + user.toString());
         }
 
-        if (user == null) {
-            // Uživatel neexistuje, ale chceme mu zobrazit zprávu o úspěchu
-            model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
-            return "pages/account/forgotpassword";
-        }
-
         if (result.hasErrors()) {
             return showForgotPasswordForm(forgotPasswordDTO);
         }
 
         if (user == null) {
-            // Uživatel neexistuje, ale chceme mu zobrazit zprávu o úspěchu
+            // User doesn't exist, but success message will be shown
             model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
             return "pages/account/forgotpassword";
         } else {
-            // Kontrola, zda pro daného uživatele již existuje platný token
+            // Check, if there is a existing token for the user
             Optional<PasswordResetTokenEntity> existingToken = passwordResetTokenRepository.findByUser(user);
             if (existingToken.isPresent()) {
-                // Existuje platný token, můžete buď ten existující token použít nebo jej smazat a vytvořit nový
+                // Token exists and will be deleted, new one will be created
                 userService.deleteCurrentToken(existingToken.get().getId());
                 String token = UUID.randomUUID().toString();
                 userService.createPasswordResetTokenForUser(user, token);
                 emailService.sendPasswordResetEmail(userEmail, token);
             } else {
-                // Vytvoření nového tokenu
+                // Creating new token
                 String token = UUID.randomUUID().toString();
                 userService.createPasswordResetTokenForUser(user, token);
                 emailService.sendPasswordResetEmail(userEmail, token);
@@ -169,10 +162,10 @@ public class AccountController {
 
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
-        // Validace tokenu, např. ověření jeho platnosti a existence v databázi
+        // Validation of the token
         if (!userService.isValidPasswordResetToken(token)) {
-            // Pokud je token neplatný, přesměrujte na stránku s chybovou zprávou nebo formulářem pro žádost o nový token
-            return "redirect:/error"; // Upravte podle potřeby
+            // If the token is invalid, error page will be shown
+            return "redirect:/account/token-expired";
         }
 
         model.addAttribute("token", token);
@@ -188,16 +181,18 @@ public class AccountController {
         }
 
         try {
-            // Volání servisní metody pro resetování hesla
             userService.resetPassword(token, password);
-            // Úspěšné resetování hesla, přesměrujte uživatele na stránku s potvrzením
             redirectAttributes.addFlashAttribute("success", "Your password has been successfully reset.");
             return "redirect:/account/login"; // Upravte podle potřeby
         } catch (InvalidTokenException e) {
-            // Chyba při ověřování tokenu, zobrazte chybovou zprávu a přesměrujte zpět na formulář
             redirectAttributes.addFlashAttribute("error", "Invalid or expired token.");
             return "redirect:/reset-password?token=" + token;
         }
+    }
+
+    @GetMapping("/token-expired")
+    public String tokenExpired() {
+        return "pages/account/tokenexpired";
     }
 
 }

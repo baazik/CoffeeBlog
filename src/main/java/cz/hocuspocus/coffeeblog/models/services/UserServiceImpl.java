@@ -160,8 +160,8 @@ public class UserServiceImpl implements UserService{
     public boolean isValidPasswordResetToken(String token) {
         Optional<PasswordResetTokenEntity> tokenEntity = passwordResetTokenRepository.findByToken(token);
 
-        if (tokenEntity == null) {
-            // Token neexistuje v databázi
+        if (!tokenEntity.isPresent()) {
+            // Token does not exist in DB
             return false;
         }
 
@@ -169,11 +169,11 @@ public class UserServiceImpl implements UserService{
         LocalDateTime now = LocalDateTime.now();
 
         if (expiryDate.isBefore(now)) {
-            // Token je expirovaný
+            // Token is expired
             return false;
         }
 
-        // Token je platný
+        // Token is valid
         return true;
 
     }

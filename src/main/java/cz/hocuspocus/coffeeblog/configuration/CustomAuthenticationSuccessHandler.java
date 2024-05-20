@@ -12,9 +12,14 @@ import java.io.IOException;
 public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
 
+    @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        if (isUrlValid(targetUrl)) {
+            getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        } else {
+            getRedirectStrategy().sendRedirect(request, response, "/articles");
+        }
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
@@ -24,5 +29,12 @@ public class CustomAuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             return prevPage;
         }
         return "/articles";
+    }
+
+    private boolean isUrlValid(String url) {
+        if (url.contains("/account/reset-password")) {
+            return false;
+        }
+        return true;
     }
 }

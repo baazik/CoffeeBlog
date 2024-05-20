@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="cs-cz" xmlns:th="">
+<head th:replace="~{fragments/layout.html :: head}"></head>
+
+<body>
+<header th:replace="~{fragments/layout.html :: header}"></header>
+
+<!-- Zde později budeme vypisovat, že email, kterým se uživatel pokouší přihlásit, je již používán -->
+<div class="py-2 flash-message message-error" th:text="${error}" th:if="${error}"></div>
+
+<article>
+    <div id="centrovac">
+        <header>
+            <h1>Token pro resetování hesla je neplatný</h1>
+        </header>
+
+        <section>
+            <p>Token pro obnovení hesla již bohužel expiroval nebo není platný.</p>
+        </section>
+    </div>
+</article>
+
+<footer th:replace="~{fragments/layout.html :: footer}"></footer>
+</body>
+
+</html>
