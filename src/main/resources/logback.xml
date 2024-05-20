@@ -1,0 +1,46 @@
+<configuration>
+    <appender name="WORKER_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/log/worker.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="WORKER_WARNING_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/log/worker-warning.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <appender name="WORKER_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+        <file>src/main/resources/log/worker-error.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <logger name="ROOT" level="INFO">
+        <appender-ref ref="WORKER_FILE" />
+        <appender-ref ref="WORKER_WARNING_FILE" />
+        <appender-ref ref="WORKER_ERROR_FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+</configuration>

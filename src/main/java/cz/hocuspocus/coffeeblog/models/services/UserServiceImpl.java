@@ -10,7 +10,8 @@ import cz.hocuspocus.coffeeblog.models.dto.LoggedUserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.UserMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.*;
-import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -19,12 +20,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.apache.logging.log4j.LogManager;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService{
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 
     @Autowired
     private UserRepository userRepository;
@@ -146,14 +151,7 @@ public class UserServiceImpl implements UserService{
         myToken.setToken(token);
         myToken.setExpiryDate(LocalDateTime.now().plusHours(24));
         passwordResetTokenRepository.save(myToken);
-    }
-
-    @Override
-    public boolean validatePasswordResetToken(String token) {
-        PasswordResetTokenEntity passwordResetToken = passwordResetTokenRepository.findByToken(token)
-                .map(result -> (PasswordResetTokenEntity) result)
-                .orElseThrow(() -> new InvalidTokenException("Invalid token"));
-        return !passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now());
+        logger.info("Created password reset token for user " + user.getEmail());
     }
 
     @Override
@@ -162,6 +160,7 @@ public class UserServiceImpl implements UserService{
 
         if (!tokenEntity.isPresent()) {
             // Token does not exist in DB
+            logger.info("Token " + token + " does not exist in DB.");
             return false;
         }
 
@@ -170,10 +169,12 @@ public class UserServiceImpl implements UserService{
 
         if (expiryDate.isBefore(now)) {
             // Token is expired
+            logger.info("Token " + token + " is expired.");
             return false;
         }
 
         // Token is valid
+        logger.info("Token " + token + " is valid.");
         return true;
 
     }
@@ -208,6 +209,7 @@ public class UserServiceImpl implements UserService{
         // Nastavení nového hesla a uložení do databáze
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+        logger.info("The user " + user.getEmail() + " successfully chagned password.");
 
         // Smazání tokenu po úspěšném resetování hesla
         user.setPasswordResetToken(null);

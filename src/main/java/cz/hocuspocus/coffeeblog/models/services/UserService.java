@@ -23,7 +23,6 @@ public interface UserService extends UserDetailsService {
 
     void createPasswordResetTokenForUser(UserEntity user, String token);
 
-    boolean validatePasswordResetToken(String token);
 
     void resetPassword(String token, String newPassword);
 
