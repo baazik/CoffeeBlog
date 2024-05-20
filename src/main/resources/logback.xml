@@ -1,15 +1,23 @@
 <configuration>
-    <appender name="WORKER_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="WORKER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>src/main/resources/log/worker.log</file>
-        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Archive log files daily -->
+            <fileNamePattern>src/main/resources/log/worker-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="WORKER_WARNING_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="WORKER_WARNING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>src/main/resources/log/worker-warning.log</file>
-        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Archive log files daily -->
+            <fileNamePattern>src/main/resources/log/worker-warning-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -18,9 +26,13 @@
         </filter>
     </appender>
 
-    <appender name="WORKER_ERROR_FILE" class="ch.qos.logback.core.FileAppender">
+    <appender name="WORKER_ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>src/main/resources/log/worker-error.log</file>
-        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Archive log files daily -->
+            <fileNamePattern>src/main/resources/log/worker-error-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%d{dd.MM.yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -35,12 +47,10 @@
         </encoder>
     </appender>
 
-
-    <logger name="ROOT" level="INFO">
+    <root level="INFO">
         <appender-ref ref="WORKER_FILE" />
         <appender-ref ref="WORKER_WARNING_FILE" />
         <appender-ref ref="WORKER_ERROR_FILE" />
         <appender-ref ref="CONSOLE" />
-    </logger>
-
+    </root>
 </configuration>

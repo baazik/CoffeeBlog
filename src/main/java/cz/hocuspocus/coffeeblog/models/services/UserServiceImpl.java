@@ -174,7 +174,6 @@ public class UserServiceImpl implements UserService{
         }
 
         // Token is valid
-        logger.info("Token " + token + " is valid.");
         return true;
 
     }

@@ -9,8 +9,11 @@ import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.exceptions.*;
 import cz.hocuspocus.coffeeblog.models.services.EmailService;
 import cz.hocuspocus.coffeeblog.models.services.UserService;
+import cz.hocuspocus.coffeeblog.models.services.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +27,8 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/account")
 public class AccountController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AccountController.class);
 
     @Autowired
     private UserService userService;
@@ -69,6 +74,7 @@ public class AccountController {
             result.rejectValue("password","error", "Passwords are not matched.");
             result.rejectValue("confirmPassword","error", "Passwords are not matched.");
             return "/pages/account/register";
+
         }
 
         redirectAttributes.addFlashAttribute("success","User was successfully registred.");
@@ -91,16 +97,13 @@ public class AccountController {
         }
 
         try {
-            System.out.println("Attempting to change password");
+          logger.info(userDTO.getEmail() + ": Attempting to change password");
             userService.changePassword(userDTO);
-            System.out.println("Password changed successfully");
         } catch (PasswordsDoNotEqualException e) {
-            System.out.println("Passwords do not match");
             result.rejectValue("password", "error", "Passwords do not match.");
             result.rejectValue("confirmPassword", "error", "Passwords do not match.");
             return "/pages/account/changepassword";
         } catch (InvalidPasswordException e) {
-            System.out.println("Invalid current password");
             result.rejectValue("currentPassword", "error", "Invalid current password.");
             return "/pages/account/changepassword";
         }
@@ -120,14 +123,14 @@ public class AccountController {
         try {
             user = userService.findUserByEmail(userEmail);
         } catch (Exception e) {
-            System.out.println("Exception occurred while finding user by email: " + e.getMessage());
+            logger.warn("Exception occurred while finding user by email: " + e.getMessage());
         }
 
         // Přidáme logování pro kontrolu
         if (user == null) {
-            System.out.println("User not found for email: " + userEmail);
+            logger.info("User not found for email: " + userEmail);
         } else {
-            System.out.println("User found: " + user.toString());
+            logger.info("User found: " + user.getEmail());
         }
 
         if (result.hasErrors()) {
@@ -147,11 +150,13 @@ public class AccountController {
                 String token = UUID.randomUUID().toString();
                 userService.createPasswordResetTokenForUser(user, token);
                 emailService.sendPasswordResetEmail(userEmail, token);
+                logger.info("Token for password reset created: " + token + " for user " + user.getEmail());
             } else {
                 // Creating new token
                 String token = UUID.randomUUID().toString();
                 userService.createPasswordResetTokenForUser(user, token);
                 emailService.sendPasswordResetEmail(userEmail, token);
+                logger.info("Token for password reset created: " + token + " for user " + user.getEmail());
             }
 
             model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
@@ -183,7 +188,8 @@ public class AccountController {
         try {
             userService.resetPassword(token, password);
             redirectAttributes.addFlashAttribute("success", "Your password has been successfully reset.");
-            return "redirect:/account/login"; // Upravte podle potřeby
+            logger.info("Password reset successfully with token: " + token);
+            return "redirect:/account/login";
         } catch (InvalidTokenException e) {
             redirectAttributes.addFlashAttribute("error", "Invalid or expired token.");
             return "redirect:/reset-password?token=" + token;
