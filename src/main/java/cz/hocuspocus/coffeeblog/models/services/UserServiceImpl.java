@@ -191,7 +191,6 @@ public class UserServiceImpl implements UserService{
         UserEntity user = fetchedToken.getUser();
         user.setPasswordResetToken(null);
         passwordResetTokenRepository.delete(fetchedToken);
-        System.out.println("Test: " + fetchedToken.getToken());
     }
 
     @Override
@@ -211,6 +210,7 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
 
         // Smazání tokenu po úspěšném resetování hesla
+        user.setPasswordResetToken(null);
         passwordResetTokenRepository.delete(resetToken);
     }
 

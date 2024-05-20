@@ -117,33 +117,52 @@ public class AccountController {
 
     @PostMapping("forgotpassword")
     public String processForgotPasswordForm(@RequestParam("email") String userEmail, ForgotPasswordDTO forgotPasswordDTO, BindingResult result, Model model) {
-        UserEntity user = userService.findUserByEmail(userEmail);
+        UserEntity user = null;
+        try {
+            user = userService.findUserByEmail(userEmail);
+        } catch (Exception e) {
+            System.out.println("Exception occurred while finding user by email: " + e.getMessage());
+        }
+
+        // Přidáme logování pro kontrolu
+        if (user == null) {
+            System.out.println("User not found for email: " + userEmail);
+        } else {
+            System.out.println("User found: " + user.toString());
+        }
+
+        if (user == null) {
+            // Uživatel neexistuje, ale chceme mu zobrazit zprávu o úspěchu
+            model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
+            return "pages/account/forgotpassword";
+        }
 
         if (result.hasErrors()) {
             return showForgotPasswordForm(forgotPasswordDTO);
         }
 
-        // Kontrola, zda pro daného uživatele již existuje platný token
-        Optional<PasswordResetTokenEntity> existingToken = passwordResetTokenRepository.findByUser(user);
-        if (existingToken.isPresent()) {
-            System.out.println("Token existuje");
-            System.out.println("Zobrazuji token" + existingToken.get().getToken());
-            // Existuje platný token, můžete buď ten existující token použít nebo jej smazat a vytvořit nový
-            userService.deleteCurrentToken(existingToken.get().getId());
-            System.out.println("Token byl smazán");
-            String token = UUID.randomUUID().toString();
-            userService.createPasswordResetTokenForUser(user, token);
-            emailService.sendPasswordResetEmail(userEmail, token);
-            System.out.println("Token byl smazán, vytvořil se nový a email se odeslal.");
+        if (user == null) {
+            // Uživatel neexistuje, ale chceme mu zobrazit zprávu o úspěchu
+            model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
+            return "pages/account/forgotpassword";
         } else {
-            // Vytvoření nového tokenu
-            String token = UUID.randomUUID().toString();
-            userService.createPasswordResetTokenForUser(user, token);
-            emailService.sendPasswordResetEmail(userEmail, token);
-            System.out.println("Byl vytvořen nový token a email se odeslal.");
-        }
+            // Kontrola, zda pro daného uživatele již existuje platný token
+            Optional<PasswordResetTokenEntity> existingToken = passwordResetTokenRepository.findByUser(user);
+            if (existingToken.isPresent()) {
+                // Existuje platný token, můžete buď ten existující token použít nebo jej smazat a vytvořit nový
+                userService.deleteCurrentToken(existingToken.get().getId());
+                String token = UUID.randomUUID().toString();
+                userService.createPasswordResetTokenForUser(user, token);
+                emailService.sendPasswordResetEmail(userEmail, token);
+            } else {
+                // Vytvoření nového tokenu
+                String token = UUID.randomUUID().toString();
+                userService.createPasswordResetTokenForUser(user, token);
+                emailService.sendPasswordResetEmail(userEmail, token);
+            }
 
-        model.addAttribute("success","Email na obnovu hesla byl úspěšně odeslán.");
+            model.addAttribute("success", "Email na obnovu hesla byl úspěšně odeslán.");
+        }
 
         return "pages/account/forgotpassword";
     }
