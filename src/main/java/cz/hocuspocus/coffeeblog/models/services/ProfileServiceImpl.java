@@ -9,6 +9,8 @@ import cz.hocuspocus.coffeeblog.models.dto.UserDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.ProfileMapper;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.UserMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ProfileNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +25,8 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class ProfileServiceImpl implements ProfileService{
+
+    private static final Logger logger = LoggerFactory.getLogger(ProfileServiceImpl.class);
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -71,25 +75,27 @@ public class ProfileServiceImpl implements ProfileService{
         UserEntity userEntity = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        //Profile id is the same as user id, so we get this variable here
-        long profileId = userEntity.getUserId();
-
-        // we create ProfileEntity fetchedProfile and fill it with found of profileRepository by id
-        ProfileEntity fetchedProfile = getProfileOrThrow(profileId);
+        ProfileEntity profileEntity = userEntity.getProfile();
+        if (profileEntity == null) {
+            logger.error("Profile not found for user: " + userEntity.getEmail());
+            throw new ProfileNotFoundException();
+        }
 
         // with a mapper, we create a DTO here with that fetchedProfile
-        return profileMapper.toDTO(fetchedProfile);
+        return profileMapper.toDTO(profileEntity);
     }
 
     @Override
     public void editProfile(ProfileDTO profile, UserDTO user) {
         ProfileEntity fetchedProfile = getProfileOrThrow(profile.getId());
-        UserEntity fetchedUser = userService.getUserOrThrow(profile.getId());
+        UserEntity fetchedUser = fetchedProfile.getUser();
         // we update profile as well as user, because with that, we make sure nickname will be change in both
         profileMapper.updateProfileEntity(profile, fetchedProfile);
         userMapper.updateUserEntity(user, fetchedUser);
         profileRepository.save(fetchedProfile);
         userRepository.save(fetchedUser);
+        logger.info("Profile of the user " + fetchedUser.getEmail() + " has been updated.");
+
     }
 
     // Metoda pro ukládání obrázku do Base64
