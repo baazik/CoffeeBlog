@@ -9,6 +9,8 @@ import cz.hocuspocus.coffeeblog.models.dto.CommentDTO;
 import cz.hocuspocus.coffeeblog.models.dto.mappers.CommentMapper;
 import cz.hocuspocus.coffeeblog.models.exceptions.ArticleNotFoundException;
 import cz.hocuspocus.coffeeblog.models.exceptions.CommentNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +22,8 @@ import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService{
+
+    private static final Logger logger = LoggerFactory.getLogger(CommentServiceImpl.class);
 
     @Autowired
     private CommentRepository commentRepository;
@@ -97,6 +101,7 @@ public class CommentServiceImpl implements CommentService{
 
         CommentEntity newComment = commentMapper.toEntity(comment);
         commentRepository.save(newComment);
+        logger.info("New comment was created by the user " + newComment.getUser().getEmail());
     }
 
     @Override
