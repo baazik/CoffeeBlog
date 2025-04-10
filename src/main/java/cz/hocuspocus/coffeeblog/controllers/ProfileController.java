@@ -103,5 +103,12 @@ public class ProfileController {
         model.addAttribute("profiles",profiles);
         return "pages/profile/list";
     }
+    @GetMapping("list")
+    public String renderProfiles(Model model)
+    {
+        List<ProfileDTO> profiles = profileService.getAll();
+        model.addAttribute("profiles",profiles);
+        return "pages/profile/list";
+    }
 
 }
